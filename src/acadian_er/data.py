@@ -4,10 +4,10 @@ real database, or the synthetic generator (same `Personne` objects either way)."
 from __future__ import annotations
 
 from genealogie_acadienne import Personne
+from genealogie_acadienne.commun.synthetique import generer_population
+from genealogie_acadienne.donnees.instantane import lire_instantane
 
 from .config import Config
-from .lib_staging.instantane import lire_instantane
-from .lib_staging.synthetique import generer_population
 
 
 def load_population(cfg: Config) -> list[Personne]:

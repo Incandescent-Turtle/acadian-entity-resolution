@@ -17,7 +17,7 @@ from dataclasses import dataclass, field
 
 from genealogie_acadienne import Personne
 
-from ..lib_staging.voisinage import Cle, cle, proches_par_role
+from genealogie_acadienne.commun.voisinage import Cle, cle, proches_par_role
 
 FACTS = {"BIRT": "birth", "BAPM": "baptism", "DEAT": "death", "BURI": "burial"}
 

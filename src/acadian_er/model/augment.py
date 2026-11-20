@@ -15,9 +15,9 @@ import copy
 import random
 
 from genealogie_acadienne import Personne, normaliser
+from genealogie_acadienne.commun.variantes import GROUPES_PRENOMS
 
 from ..config import AugmentConfig
-from ..lib_staging.noms_variantes import GROUPES_PRENOMS
 
 _VARIANTS = {g[0]: g[1:] for g in GROUPES_PRENOMS}
 _FACTS = ("BIRT", "BAPM", "DEAT", "BURI")

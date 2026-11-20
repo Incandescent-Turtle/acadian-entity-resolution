@@ -36,7 +36,7 @@ def main(argv: list[str] | None = None) -> None:
     if args.stage == "snapshot":
         from genealogie_acadienne import get_connection, load_env_file
 
-        from .lib_staging.instantane import instantane_depuis_base
+        from genealogie_acadienne.donnees.instantane import instantane_depuis_base
 
         load_env_file()
         conn = get_connection()
@@ -46,8 +46,8 @@ def main(argv: list[str] | None = None) -> None:
             conn.close()
         print(f"snapshot written to {out}")
     elif args.stage == "synth":
-        from .lib_staging.instantane import ecrire_instantane
-        from .lib_staging.synthetique import generer_population
+        from genealogie_acadienne.donnees.instantane import ecrire_instantane
+        from genealogie_acadienne.commun.synthetique import generer_population
 
         s = cfg.data.synthetic
         pop = generer_population(cfg.seed, s.n_fondateurs, s.n_generations, s.n_arbres,

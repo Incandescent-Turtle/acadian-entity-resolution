@@ -15,14 +15,14 @@ import torch
 from torch_geometric.data import Data
 
 from genealogie_acadienne import Personne
+from genealogie_acadienne.commun.voisinage import Cle, cle, indexer, tous_les_liens
 
 from ..config import FeatureConfig
-from ..lib_staging.voisinage import Cle, cle, indexer, tous_les_liens
 from .features import FeatureEncoder
 
-# lib_staging relation names -> project names (same order = relation ids)
+# library relation names (voisinage) -> project names (same order = relation ids)
 RELATIONS = ("parent_of", "child_of", "spouse_of")
-_FROM_STAGING = {"parent_de": 0, "enfant_de": 1, "conjoint_de": 2}
+_FROM_LIBRARY = {"parent_de": 0, "enfant_de": 1, "conjoint_de": 2}
 
 
 @dataclass
@@ -55,7 +55,7 @@ def build_graph(people: list[Personne], feature_cfg: FeatureConfig) -> FamilyGra
     links = tous_les_liens(index)                      # sorted by source key
     src = np.array([key_to_idx[s] for s, _, _ in links], dtype=np.int64)
     dst = np.array([key_to_idx[d] for _, _, d in links], dtype=np.int64)
-    typ = np.array([_FROM_STAGING[r] for _, r, _ in links], dtype=np.int64)
+    typ = np.array([_FROM_LIBRARY[r] for _, r, _ in links], dtype=np.int64)
     order = np.lexsort((dst, src))
     src, dst, typ = src[order], dst[order], typ[order]
     rowptr = np.zeros(len(keys) + 1, dtype=np.int64)

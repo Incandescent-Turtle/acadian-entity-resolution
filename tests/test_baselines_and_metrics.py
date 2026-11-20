@@ -1,9 +1,10 @@
 import numpy as np
 import pandas as pd
 
+from genealogie_acadienne.commun.voisinage import indexer
+
 from acadian_er.baselines import EmbeddingRanker, ExactNameCriteriaRanker, TfidfEncoder, record_text
 from acadian_er.evaluation import rank_of_target, summarise
-from acadian_er.lib_staging.voisinage import indexer
 
 
 def test_record_text_is_attribute_only(population):

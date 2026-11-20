@@ -2,9 +2,10 @@ import copy
 
 import numpy as np
 
+from genealogie_acadienne.commun.voisinage import indexer, voisinage
+
 from acadian_er.graph import RELATIONS, build_graph, ego_batch
 from acadian_er.graph.features import FeatureEncoder
-from acadian_er.lib_staging.voisinage import indexer, voisinage
 
 
 def test_graph_shape_and_symmetry(population, tiny_cfg):

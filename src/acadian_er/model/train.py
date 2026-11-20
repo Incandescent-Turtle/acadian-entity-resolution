@@ -20,8 +20,9 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
+from genealogie_acadienne.commun.voisinage import Cle
+
 from ..config import Config, resolve_device
-from ..lib_staging.voisinage import Cle
 from .augment import augment
 from .rgcn import RGCNEncoder
 from ..graph.build import RELATIONS, FamilyGraph

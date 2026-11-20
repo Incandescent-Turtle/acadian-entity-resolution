@@ -2,20 +2,21 @@ import random
 
 import pytest
 
-from acadian_er.benchmark import TIERS, build_benchmark, clone_family, load_benchmark, save_benchmark
-from acadian_er.benchmark.clone import select_anchors
-from acadian_er.lib_staging.voisinage import construire_adjacence, indexer, proches_par_role
+from genealogie_acadienne.commun.clonage import choisir_bien_documentees, cloner_famille
+from genealogie_acadienne.commun.voisinage import construire_adjacence, indexer, proches_par_role
+
+from acadian_er.benchmark import TIERS, build_benchmark, load_benchmark, save_benchmark
 
 
 @pytest.fixture
 def setup(population, tiny_cfg):
     index = indexer(population)
-    anchors = select_anchors(index, 10, random.Random(0), 3, 3)
+    anchors = choisir_bien_documentees(index, 10, random.Random(0), 3, 3)
     return index, anchors, tiny_cfg.benchmark
 
 
 def _clone(index, anchor, tree=900):
-    fam, key = clone_family(anchor, index, tree, "C0_", 1, construire_adjacence(index))
+    fam, key = cloner_famille(anchor, index, tree, "C0_", 1, construire_adjacence(index))
     return {(p.tree_id, p.person_id): p for p in fam.values()}, key
 
 

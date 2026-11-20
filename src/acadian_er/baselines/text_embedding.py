@@ -16,9 +16,9 @@ from __future__ import annotations
 import numpy as np
 
 from genealogie_acadienne import Personne
+from genealogie_acadienne.commun.voisinage import Cle
 
 from ..config import TextEmbeddingConfig, resolve_device
-from ..lib_staging.voisinage import Cle
 from .base import cosine_scores
 
 FACT_LABELS = {"BIRT": "born", "BAPM": "baptised", "DEAT": "died", "BURI": "buried"}

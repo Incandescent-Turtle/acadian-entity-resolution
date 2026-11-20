@@ -2,10 +2,11 @@
 
 import pandas as pd
 
+from genealogie_acadienne.donnees.instantane import lire_instantane
+
 from acadian_er.cli import main
 from acadian_er.experiments.rq1 import run_rq1
 from acadian_er.experiments.rq2 import stage_candidates, stage_verify, synthetic_labelled_pairs
-from acadian_er.lib_staging.instantane import lire_instantane
 
 
 def test_rq1_end_to_end(tiny_cfg):

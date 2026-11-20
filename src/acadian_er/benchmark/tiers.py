@@ -20,11 +20,11 @@ import random
 from collections.abc import Callable
 
 from genealogie_acadienne import Personne, alias_dit, normaliser
+from genealogie_acadienne.commun.dates import decaler_date
+from genealogie_acadienne.commun.variantes import GROUPES_PRENOMS
+from genealogie_acadienne.commun.voisinage import Cle, cle, indexer, proches_par_role
 
 from ..config import BenchmarkConfig
-from ..lib_staging.dates import decaler_date
-from ..lib_staging.noms_variantes import GROUPES_PRENOMS
-from ..lib_staging.voisinage import Cle, cle, indexer, proches_par_role
 
 Family = dict[Cle, Personne]
 _VARIANTS = {g[0]: g[1:] for g in GROUPES_PRENOMS}

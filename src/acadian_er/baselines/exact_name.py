@@ -15,7 +15,7 @@ import numpy as np
 
 from genealogie_acadienne import Personne, comparer, criteres_concordants
 
-from ..lib_staging.voisinage import Cle
+from genealogie_acadienne.commun.voisinage import Cle
 
 POOL_BONUS = 100.0
 

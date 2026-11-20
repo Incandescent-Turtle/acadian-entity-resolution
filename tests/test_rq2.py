@@ -4,8 +4,9 @@ import httpx
 import pandas as pd
 import pytest
 
+from genealogie_acadienne.commun.voisinage import indexer
+
 from acadian_er.config import BackendConfig
-from acadian_er.lib_staging.voisinage import indexer
 from acadian_er.rq2 import (FakeBackend, LabelledPair, OllamaBackend, OpenAICompatBackend,
                             build_context, build_prompt, check_faithfulness, parse_response,
                             read_labels, verification_metrics, write_labels)

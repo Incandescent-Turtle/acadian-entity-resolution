@@ -12,6 +12,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from genealogie_acadienne.commun.voisinage import Cle, indexer
+
 from ..baselines import EmbeddingRanker, ExactNameCriteriaRanker, SentenceTransformerEncoder, TfidfEncoder
 from ..baselines.base import cosine_scores
 from ..benchmark import Benchmark, build_benchmark, load_benchmark, save_benchmark
@@ -20,7 +22,6 @@ from ..data import load_population
 from ..evaluation import rank_of_target, summarise, write_report
 from ..evaluation.report import write_manifest
 from ..graph import FamilyGraph, build_graph
-from ..lib_staging.voisinage import Cle, indexer
 from ..model.train import TrainedEncoder, embed, load_encoder, save_encoder, train_encoder
 
 

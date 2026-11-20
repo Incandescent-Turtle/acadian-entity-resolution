@@ -14,7 +14,7 @@ import zlib
 import numpy as np
 import pandas as pd
 
-from ..lib_staging.voisinage import Cle
+from genealogie_acadienne.commun.voisinage import Cle
 
 
 def _tiebreak(seed: int, query: Cle, cand: Cle) -> float:

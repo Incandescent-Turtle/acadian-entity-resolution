@@ -19,9 +19,9 @@ import zlib
 import numpy as np
 
 from genealogie_acadienne import Personne, normaliser
+from genealogie_acadienne.commun.variantes import cles_noms_famille, cles_prenoms, nom_famille_probable
 
 from ..config import FeatureConfig
-from ..lib_staging.noms_variantes import cles_noms_famille, cles_prenoms, nom_famille_probable
 
 YEAR_FACTS = ("BIRT", "BAPM", "DEAT", "BURI", "MARR")
 

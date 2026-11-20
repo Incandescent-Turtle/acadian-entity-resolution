@@ -21,13 +21,13 @@ from pathlib import Path
 import pandas as pd
 
 from genealogie_acadienne import Personne
+from genealogie_acadienne.commun.candidats import IndexCandidats
+from genealogie_acadienne.commun.synthetique import generer_population
+from genealogie_acadienne.commun.voisinage import Cle, indexer
 
 from ..config import Config, seed_everything
 from ..data import load_population
 from ..evaluation.report import markdown_table, write_manifest
-from ..lib_staging.candidats import IndexCandidats
-from ..lib_staging.synthetique import generer_population
-from ..lib_staging.voisinage import Cle, indexer
 from ..rq2 import (LabelledPair, build_context, build_prompt, check_faithfulness, make_backend,
                    parse_response, read_labels, verification_metrics, write_labels)
 from ..rq2.backends import LLMBackend

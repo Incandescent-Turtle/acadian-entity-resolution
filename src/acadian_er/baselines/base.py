@@ -6,7 +6,7 @@ from typing import Protocol
 
 import numpy as np
 
-from ..lib_staging.voisinage import Cle
+from genealogie_acadienne.commun.voisinage import Cle
 
 
 class Ranker(Protocol):

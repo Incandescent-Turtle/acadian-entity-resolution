@@ -5,7 +5,8 @@ the tier perturbation is applied, and a query is recorded:
 (clone key -> original key, relaxed-name candidate list). All methods rank the
 same candidate list. Candidates never include clone trees.
 
-The benchmark is stored as a lib_staging snapshot of population + clones, plus
+The benchmark is stored as a snapshot (`genealogie_acadienne.donnees.instantane`)
+of population + clones, plus
 `queries.jsonl` and the config used.
 """
 
@@ -17,12 +18,12 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 
 from genealogie_acadienne import Personne
+from genealogie_acadienne.commun.candidats import IndexCandidats
+from genealogie_acadienne.commun.clonage import choisir_bien_documentees, cloner_famille
+from genealogie_acadienne.commun.voisinage import Cle, construire_adjacence, indexer
+from genealogie_acadienne.donnees.instantane import ecrire_instantane, lire_instantane
 
 from ..config import Config
-from ..lib_staging.candidats import IndexCandidats
-from ..lib_staging.instantane import ecrire_instantane, lire_instantane
-from ..lib_staging.voisinage import Cle, construire_adjacence, indexer
-from .clone import clone_family, select_anchors
 from .tiers import TIERS
 
 
@@ -52,7 +53,7 @@ def build_benchmark(population: list[Personne], cfg: Config, log=print) -> Bench
     rng = random.Random(cfg.seed)
     index = indexer(population)
     adjacency = construire_adjacence(index)
-    anchors = select_anchors(index, bc.n_anchors, rng, bc.min_fields, bc.min_family)
+    anchors = choisir_bien_documentees(index, bc.n_anchors, rng, bc.min_fields, bc.min_family)
     log(f"{len(anchors)} anchors selected from {len(index)} people")
 
     clones: list[Personne] = []
@@ -64,8 +65,8 @@ def build_benchmark(population: list[Personne], cfg: Config, log=print) -> Bench
         tree_id = bc.clone_tree_base + t
         clone_trees.append(tree_id)
         for n, anchor in enumerate(anchors):
-            family, clone_key = clone_family(anchor, index, tree_id, prefix=f"C{n}_",
-                                             depth=bc.clone_depth, adjacency=adjacency)
+            family, clone_key = cloner_famille(anchor, index, tree_id, prefixe=f"C{n}_",
+                                               profondeur=bc.clone_depth, adjacence=adjacency)
             family = {k_new: p for p in family.values() for k_new in [(p.tree_id, p.person_id)]}
             tier_rng = random.Random(f"{cfg.seed}:{tier}:{n}")
             what = TIERS[tier](family, clone_key, tier_rng, bc)
