@@ -33,7 +33,7 @@ def write_manifest(cfg: Config, out_dir: Path, **extra) -> None:
 def markdown_table(df: pd.DataFrame, floatfmt: str = ".3f") -> str:
     cols = list(df.columns)
     lines = ["| " + " | ".join(cols) + " |", "|" + "|".join("---" for _ in cols) + "|"]
-    for _, r in df.iterrows():
+    for r in df.astype(object).itertuples(index=False):   # keep ints as ints
         cells = [format(v, floatfmt) if isinstance(v, float) else str(v) for v in r]
         lines.append("| " + " | ".join(cells) + " |")
     return "\n".join(lines)
