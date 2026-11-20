@@ -41,7 +41,7 @@ appears about 4 times. These are **confirmed** (recorded by the user).
 ## Graph
 
 - **Nodes:** one per `Personne`.
-- **Edges:** from `lib_staging.voisinage.tous_les_liens`, typed, always in both
+- **Edges:** from `genealogie_acadienne.commun.voisinage.tous_les_liens`, typed, always in both
   directions:
   - `parent_of` (parent → child) and its inverse `child_of`;
   - `spouse_of` (symmetric), from `conjoints` and from `mariages[].conjoint_id`.
@@ -66,11 +66,16 @@ edges, so k=0 is attribute-only.
 ## Assumptions about the real data (to check first)
 
 1. **Dit names.**
-   - *Assumed* they appear inside `n_full` ("Jean Doucet dit Laverdure"), as handled by
-     `alias_dit`, the `appariement-prenoms` work and the library's notes.
-   - They may also, or instead, be stored as separate name rows (`_AKA`, a second
-     `NAME`) or as a GEDCOM `NICK`. Neither is read as a dit name today, though `_AKA`
-     rows end up in `noms_alternatifs`.
+   - **Confirmed by the user (2026-11-20):** dit names are part of the names
+     themselves, i.e. inside `n_full` ("Jean Doucet dit Laverdure"), which is what
+     `alias_dit` handles.
+   - Names can be quite jumbled, so the exact patterns are still **to examine** once we
+     have the data:
+     - marker spellings;
+     - several dits ("dit X ou Y");
+     - whether the dit sits before or after the surname;
+     - stray punctuation.
+   - Separate name rows (`_AKA`) still end up in `noms_alternatifs`.
 2. **Name types.** *Assumed* `n_type` values include `NAME`, `_MARNM` and `_AKA`.
    Unverified.
 3. **Given names.** *Assumed* `n_givn` holds all given names in order, so "dropped

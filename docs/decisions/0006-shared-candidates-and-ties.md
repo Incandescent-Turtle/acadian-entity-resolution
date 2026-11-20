@@ -5,7 +5,7 @@ method uses an *exact*-name pool, which would miss most of the tier-1 clones by
 construction. Scores often tie, especially integer criteria counts.
 
 **Decision.**
-- **Candidates:** `lib_staging.candidats` gives every query one candidate list. A
+- **Candidates:** `genealogie_acadienne.commun.candidats` gives every query one candidate list. A
   candidate must share a surname key (spelling variants and dit aliases) and at least
   one canonical given name. Clone trees and the opposite known sex are excluded.
 - **Exact-name baseline:** inside that list, the old exact-name pool ranks first

@@ -15,7 +15,7 @@ See `docs/RESEARCH_DESIGN.md` for the full design and `docs/ARCHITECTURE.md` for
 
 ## Current state
 - **No database access yet.** Everything runs on the synthetic generator
-  (`acadian_er.lib_staging.synthetique`), which feeds the same pipeline as a real snapshot.
+  (`genealogie_acadienne.commun.synthetique`), which feeds the same pipeline as a real snapshot.
 - Scaffold only: no tuning, no real training runs. Sensible defaults.
 
 ## Commands
@@ -49,9 +49,15 @@ Stages: `snapshot synth benchmark train evaluate rq1 rq2-candidates rq2 rq2-synt
 ## The library: `genealogie_acadienne`
 Required dependency (French), the user's own repo, checked out next to this one at
 `../genealogie-acadienne`, branch `package-module`; pinned in `pyproject.toml` to a commit.
-Use it for DB connection and loading (`DBConfig`, `get_connection`, `charger_personnes`,
-`charger_groupe`), the `Personne` model, exact-name pooling (`trouver_noms_partages`,
-`trouver_paires`) and pairwise comparison (`comparer`, `criteres_concordants`).
+Use it for:
+- DB connection and loading (`DBConfig`, `get_connection`, `charger_personnes`,
+  `charger_groupe`) and the `Personne` model;
+- exact-name pooling (`trouver_noms_partages`, `trouver_paires`) and pairwise
+  comparison (`comparer`, `criteres_concordants`);
+- the tools that started here and moved there:
+  - `commun.variantes`, `commun.candidats`, `commun.dates`;
+  - `commun.voisinage`, `commun.clonage`, `commun.synthetique`;
+  - `donnees.instantane` (Parquet snapshots).
 - Import it directly. No optional imports, no try/except fallbacks, no copies or
   reimplementations of what it does. We convert `Personne` into graphs/tensors; we never
   define a competing person model.
@@ -59,7 +65,9 @@ Use it for DB connection and loading (`DBConfig`, `get_connection`, `charger_per
   agreed to edit and push `package-module`), then bump the pin here.
 
 ## Library staging rules (`src/acadian_er/lib_staging/`)
-General-purpose code that should later move into `genealogie_acadienne`:
+Waiting area for new general-purpose code that should later move into
+`genealogie_acadienne` (currently empty; the user approves each move, which is a copy
+into the library, a push to `package-module`, and a pin bump here):
 - one module per concern, **French identifiers** (English docstrings OK), following the
   library's conventions (`Personne`, `charger_*`, DB access through its `run_query`/`t`);
 - may import only `genealogie_acadienne`, the standard library and light deps
@@ -72,7 +80,7 @@ General-purpose code that should later move into `genealogie_acadienne`:
 ## Where things live
 | Path | What |
 | --- | --- |
-| `src/acadian_er/lib_staging/` | library-bound: names, candidates, dates, neighbourhoods, snapshots, synthetic data |
+| `src/acadian_er/lib_staging/` | waiting area for library-bound code (empty; see `docs/LIBRARY_STAGING.md`) |
 | `src/acadian_er/graph/` | Personne -> features + typed edges (PyG), k-hop ego batches |
 | `src/acadian_er/benchmark/` | cloning, perturbation tiers, labelled RQ1 queries |
 | `src/acadian_er/baselines/` | exact-name + criteria (old method), TF-IDF, sentence-transformer |

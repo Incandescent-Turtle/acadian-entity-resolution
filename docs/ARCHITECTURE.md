@@ -10,16 +10,18 @@ flowchart LR
     MODEL["Personne<br/>(Proche, Mariage)"]
     CMP["comparer<br/>criteres_concordants"]
     NOMS["normaliser · alias_dit<br/>tokens_prenoms · trouver_paires"]
+    SNAP["donnees.instantane<br/>Parquet snapshots"]
+    SYN["commun.synthetique<br/>synthetic population"]
+    VAR["commun.variantes"]
+    CAND["commun.candidats<br/>relaxed-name blocking"]
+    DATES["commun.dates"]
+    VOIS["commun.voisinage<br/>typed links, k hops"]
+    CLO["commun.clonage"]
     DB --> LOAD --> MODEL
   end
 
-  subgraph LS["acadian_er.lib_staging (library-bound, French)"]
-    SNAP["instantane<br/>Parquet snapshots"]
-    SYN["synthetique<br/>synthetic population"]
-    VAR["noms_variantes"]
-    CAND["candidats<br/>relaxed-name blocking"]
-    DATES["dates"]
-    VOIS["voisinage<br/>typed links, k hops"]
+  subgraph LS["acadian_er.lib_staging (waiting area, currently empty)"]
+    NEW["future library-bound modules"]
   end
 
   subgraph ER["acadian_er (project-specific)"]
@@ -37,6 +39,8 @@ flowchart LR
   SNAP -->|list of Personne| BENCH
   NOMS --> VAR --> CAND
   CAND --> BENCH
+  CLO --> BENCH
+  NEW -. moves to .-> GA
   VOIS --> GRAPH
   VOIS --> BENCH
   DATES --> BENCH
@@ -51,18 +55,24 @@ flowchart LR
   EXP -. drives .-> BENCH & RGCN & EVAL & RQ2
 ```
 
-The boundary is one-way: `lib_staging` imports only `genealogie_acadienne` and light
-libraries (pandas, pyarrow, numpy, stdlib). `tests/lib_staging/test_frontiere.py`
-enforces this. Project code may import anything.
+General-purpose tools (names, candidates, dates, neighbourhoods, cloning, synthetic
+data, snapshots) live in the library; they started in `lib_staging` and moved on
+2026-11-20 (see LIBRARY_STAGING.md).
+
+The boundary is one-way:
+- `lib_staging` (and the library) import only `genealogie_acadienne` and light
+  libraries (pandas, pyarrow, numpy, stdlib). `tests/lib_staging/test_frontiere.py`
+  enforces this for `lib_staging`.
+- Project code may import anything.
 
 ## The common currency: `list[Personne]`
 
 Every stage passes `genealogie_acadienne.Personne` objects around. They come from:
-- the database: `charger_groupe`, exported once by `lib_staging.instantane` into Parquet;
-- or the synthetic generator: `lib_staging.synthetique.generer_population`.
+- the database: `charger_groupe`, exported once by `donnees.instantane` into Parquet;
+- or the synthetic generator: `commun.synthetique.generer_population`.
 
 Both produce the same objects, so the experiments cannot tell which source they got.
-People are keyed by `(tree_id, person_id)` (`lib_staging.voisinage.Cle`). Relatives are
+People are keyed by `(tree_id, person_id)` (`commun.voisinage.Cle`). Relatives are
 linked through `Proche.person_id` and `Mariage.conjoint_id`, which were added to the
 library for this project.
 
@@ -70,11 +80,12 @@ library for this project.
 
 | Module | Main interface |
 | --- | --- |
-| `lib_staging.instantane` | `ecrire_instantane(personnes, dossier, source)`, `lire_instantane(dossier) -> list[Personne]`, `instantane_depuis_base(conn, dossier)` |
-| `lib_staging.synthetique` | `generer_population(graine, ...) -> PopulationSynthetique(personnes, identites)` |
-| `lib_staging.candidats` | `IndexCandidats(population).candidats(p, arbres_exclus=...) -> list[Cle]` |
-| `lib_staging.voisinage` | `liens_de(p)`, `tous_les_liens(index)`, `voisinage(cle, index, k)`, `proches_par_role(p, index)` |
-| `lib_staging.noms_variantes` / `dates` | `cle_prenom`, `cle_nom_famille`, `cles_prenoms`; `analyser_date`, `decaler_date`, `ecart_annees` |
+| library `donnees.instantane` | `ecrire_instantane(personnes, dossier, source)`, `lire_instantane(dossier) -> list[Personne]`, `instantane_depuis_base(conn, dossier)` |
+| library `commun.synthetique` | `generer_population(graine, ...) -> PopulationSynthetique(personnes, identites)` |
+| library `commun.candidats` | `IndexCandidats(population).candidats(p, arbres_exclus=...) -> list[Cle]` |
+| library `commun.voisinage` | `liens_de(p)`, `tous_les_liens(index)`, `voisinage(cle, index, k)`, `proches_par_role(p, index)` |
+| library `commun.clonage` | `choisir_bien_documentees(index, n, rng, ...)`, `cloner_famille(depart, index, tree_id, prefixe, profondeur)` |
+| library `commun.variantes` / `dates` | `cle_prenom`, `cle_nom_famille`, `cles_prenoms`; `analyser_date`, `decaler_date`, `ecart_annees` |
 | `graph` | `build_graph(people, FeatureConfig) -> FamilyGraph` (PyG `Data(x, edge_index, edge_type)` + CSR); `ego_batch(graph, centres, k) -> EgoBatch` |
 | `benchmark` | `build_benchmark(population, cfg) -> Benchmark(people, queries, anchors, clone_trees)`; `Query(tier, query, target, candidates, perturbation)` |
 | `baselines` / `experiments.rq1.RGCNRanker` | `Ranker.score(query, candidates) -> np.ndarray` (higher = more likely the same) |
