@@ -1,21 +1,26 @@
-# 0009 — Clone only the immediate family (proposed)
+# 0009 — Clone depth: run immediate family and 2 hops side by side
 
-**Status: proposed. Needs the user's confirmation.**
+**Status: accepted (2026-11-20).**
 
 **Context.** The specification says to clone the anchor "plus their immediate family".
 At k=2, the *original's* neighbourhood includes grandparents, siblings and in-laws, but
 the *clone's* only reaches what was cloned. Every 2-hop path in the clone has to stay
-inside {anchor, parents, spouses, children}: parent → anchor's sibling does not exist,
-and so on.
+inside {anchor, parents, spouses, children}.
 
-**Decision (for now).** `benchmark.clone_depth: 1`: the immediate family, as specified.
-The depth is configurable (`clone_depth: 2` copies the full 2-hop neighbourhood).
+**Decision.** Run RQ1 twice and report both:
+- `clone_depth: 1`, the immediate family, as specified. This is the main result
+  (`configs/rq1_webtrees.yaml`).
+- `clone_depth: 2`, the full 2-hop neighbourhood copied, as a sensitivity analysis
+  (`configs/rq1_webtrees_depth2.yaml`). Synthetic counterpart:
+  `configs/dev_synthetic_depth2.yaml`.
+
+Both use the same seed, so they select the same anchors.
 
 **Consequences.**
-- k=2 sees nearly the same information as k=1 on the clone side, so RQ1 probably
-  **understates** what 2 hops can add. Real duplicates in another tree usually come
-  with their own wider family.
-- Options:
-  - (a) keep depth 1 and report this;
-  - (b) clone at depth 2 for every tier;
-  - (c) run both as a sensitivity analysis. Recommended.
+- The depth-1 run probably understates what 2 hops can add. The depth-2 run shows how
+  much, but its clones carry more copied structure, which makes them easier for every
+  graph method.
+- Each tier must stay meaningful at depth 2:
+  - t4 drops most of the copied relatives;
+  - t5 drops the other parent and that parent's ancestors (siblings, shared with the kept parent, stay);
+  - t3 blanks the parents' names only.

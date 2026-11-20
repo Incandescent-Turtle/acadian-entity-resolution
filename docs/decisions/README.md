@@ -13,4 +13,4 @@ consequences. Status is *accepted* unless marked otherwise.
 | [0006](0006-shared-candidates-and-ties.md) | One relaxed-name candidate list for all methods; seeded tie-breaking |
 | [0007](0007-attribute-only-means-own-facts.md) | "Attribute-only" (k=0) means the person's own facts, no relative's name |
 | [0008](0008-rq2-fact-ids-and-backends.md) | RQ2: fact IDs for evidence, faithfulness by ID + value, OpenAI-compatible backend |
-| [0009](0009-clone-immediate-family.md) | Clone only the immediate family (*proposed*: to confirm) |
+| [0009](0009-clone-immediate-family.md) | Clone depth: run immediate family (main) and 2 hops (sensitivity) side by side |

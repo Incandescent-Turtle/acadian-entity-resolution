@@ -10,6 +10,8 @@ YAML file and `seed`. Outputs go to `results/<name>/`, and every output folder g
 | `configs/tiny_test.yaml` | the smoke tests (seconds, CPU) |
 | `configs/dev_synthetic.yaml` | development on synthetic data (~42k people, 20 trees) |
 | `configs/rq1_webtrees.yaml` | RQ1 on the real snapshot |
+| `configs/rq1_webtrees_depth2.yaml` | RQ1 sensitivity run: clones the 2-hop neighbourhood (ADR 0009) |
+| `configs/dev_synthetic_depth2.yaml` | synthetic counterpart of the depth-2 run |
 | `configs/rq2_ollama.yaml` | RQ2 with a local Ollama model |
 | `configs/rq2_openai_compat.yaml` | RQ2 through OpenRouter or a cluster server |
 
@@ -44,6 +46,10 @@ acadian-er rq1       --config configs/dev_synthetic.yaml
 | `results/<name>/rq1/checkpoints/rgcn_k{k}.pt` (+ `.json`) | encoder and loss history |
 | `results/<name>/rq1/summary.csv`, `report.md` | Recall@5/@10, MRR, candidate recall per method × tier |
 | `results/<name>/rq1/per_query.csv` | the target's rank for every method and query |
+
+Run RQ1 with both `rq1_webtrees.yaml` (immediate family cloned, main result) and
+`rq1_webtrees_depth2.yaml` (2-hop neighbourhood cloned, sensitivity analysis) and
+report both (ADR 0009). They share the seed, so they use the same anchors.
 
 Choose methods with `rq1.methods`, from `exact_name`, `tfidf`, `sentence_transformer`
 and `rgcn_k0|1|2`. The sentence-transformer model is downloaded from Hugging Face on

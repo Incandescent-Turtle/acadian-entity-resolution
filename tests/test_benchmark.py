@@ -69,3 +69,17 @@ def test_build_save_load(population, tiny_cfg, tmp_path):
     assert again.queries == bench.queries and len(again.people) == len(bench.people)
     # same seed -> same benchmark
     assert build_benchmark(population, tiny_cfg, log=lambda *a: None).queries == bench.queries
+
+
+def test_depth_two_clones_stay_consistent(population, tiny_cfg):
+    import dataclasses
+
+    cfg = dataclasses.replace(tiny_cfg, benchmark=dataclasses.replace(tiny_cfg.benchmark, clone_depth=2))
+    deep = build_benchmark(population, cfg, log=lambda *a: None)
+    shallow = build_benchmark(population, tiny_cfg, log=lambda *a: None)
+    assert deep.anchors == shallow.anchors                     # same seed -> same anchors
+    assert len(deep.people) > len(shallow.people)              # more relatives copied
+    by_key = {(p.tree_id, p.person_id): p for p in deep.people}
+    for p in deep.people:
+        for x in p.parents + p.enfants + p.conjoints:
+            assert (p.tree_id, x["person_id"]) in by_key

@@ -1,0 +1,35 @@
+# Synthetic counterpart of rq1_webtrees_depth2.yaml: clones the 2-hop neighbourhood (ADR 0009).
+# uses the GPU automatically when available.
+name: dev_synthetic_depth2
+seed: 0
+results_dir: results
+
+data:
+  source: synthetic
+  synthetic:
+    n_fondateurs: 40
+    n_generations: 6
+    n_arbres: 20
+    profondeur_arbre: 4
+
+benchmark:
+  out_dir: data/benchmarks/dev_synthetic_depth2
+  clone_depth: 2
+  n_anchors: 200
+
+train:
+  ks: [0, 1, 2]
+  epochs: 10
+  batch_size: 256
+  anchors_per_epoch: 20000
+  device: auto
+
+rq1:
+  methods: [exact_name, tfidf, sentence_transformer, rgcn_k0, rgcn_k1, rgcn_k2]
+  recall_ks: [5, 10]
+
+rq2:
+  backend:
+    kind: fake
+  ks: [0, 2]
+  max_pairs: 40

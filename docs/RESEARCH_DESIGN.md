@@ -39,7 +39,7 @@ to each clone:
   and training.
 
 **Candidates.** All methods rank the same relaxed-name candidate list
-(`lib_staging.candidats`). A candidate must share a surname key (spelling variants and
+(`genealogie_acadienne.commun.candidats`). A candidate must share a surname key (spelling variants and
 dit aliases included) and at least one canonical given name (Marie = Mary; dropped
 given names allowed). Clone trees are excluded and people of the opposite known sex are
 excluded. Candidate-list recall is reported separately: a target missing from the list
@@ -108,9 +108,11 @@ candidate-list size.
   and 4. This can favour the R-GCN on those tiers. The augmentations deliberately leave
   out dit-name swaps, blanked parent names and line removal (tiers 3 and 5). The
   attribute baselines get no training at all. See ADR 0004.
-- **Clone neighbourhood depth.** Only the immediate family is cloned, so at k=2 the
-  clone's 2-hop neighbourhood is thinner than the original's: grandparents, siblings and
-  in-laws are missing. This works against k=2 and is a design choice to revisit (ADR 0009).
+- **Clone neighbourhood depth.** With only the immediate family cloned, the clone's
+  2-hop neighbourhood is thinner than the original's: grandparents, siblings and in-laws
+  are missing. This works against k=2. **Mitigation (agreed): RQ1 is run with
+  `clone_depth: 1` (as specified) and `clone_depth: 2` side by side** and both are
+  reported (ADR 0009).
 - **Candidate generation bounds recall.** All methods share one candidate list, so a
   blocking miss is everyone's miss. This is reported but can hide differences.
 - **Anchor selection bias.** Anchors are well-documented people by construction. Results
