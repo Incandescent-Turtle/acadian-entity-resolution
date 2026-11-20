@@ -1,0 +1,24 @@
+# Never commit data or credentials
+.env
+data/
+results/
+temp/
+tempprompt.md
+
+# Model checkpoints and caches
+checkpoints/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+.cache/
+
+# Python
+.venv/
+__pycache__/
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.vscode/
+.idea/
