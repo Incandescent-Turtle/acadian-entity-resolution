@@ -1,0 +1,43 @@
+The professor had some clarifications on my project:
+
+Commented by Yuan:
+
+Interesting topic. 
+
+My current understanding is that in the end, your solution is for the task of identify duplicate entries, you plan to do this in two steps, using some methods to retrieval a candidate set, and then let LLM decide based on the narrowed set. 
+
+Then RQ1 asks whether your retrieval approach works using kinship-neighborhood
+embeddings compared to an attribute-only approach and also considers robustness (under missing or noisy information). I am not sure if you plan to control for this missing or noisy information, or if you mean this is a feature of the dataset. 
+
+RQ2 feels a bit strange, because I expected you to describe how the overall LLM-based pipeline works with your embedding-based approach versus an attribute-only method or another simple method. But then it reads like you are comparing "2-hop family neighborhood" vs. "two personal records". How are these connected to RQ1? 
+
+A simple reply to my concern via email would be good before moving forward.
+
+
+MY ANSWER HERE:
+
+Hello Prof. Yuan Tian,
+
+You had some clarifying questions on my C451 proposal, and I'll try and clarify more here! 
+
+In your feedback, it seems you understand my proposal to be a 2-step pipeline, with RQ1 and RQ2 building off each other. That isn't quite the case, the project isn't really a two-stage pipeline.
+
+The two RQs are separate experiments that ask the same underlying question in two different contexts and with different strategies:
+
+"when does the family (graph) structure around a person (node) help, compared with just that person's record alone?"
+
+RQ1 asks this for retrieval (ranking the true duplicate). RQ2 asks it for the match decision and its justification, using LLMs. RQ1's output isn't necessarily being used as input for the LLM, although promising candidates found in RQ1 may be utilized as pairs in RQ2.
+
+On the missing and noisy information in RQ1:
+
+It is controlled. I clone a well-documented person (most information fields are filled, and their local graph neighbourhood is well-populated) and their immediate family into a dummy tree, which gives a known match between the dummy and the original. I then apply one perturbation per tier: a dit name (nickname) or dropped given name, dates removed or shifted, parent names removed, most of the neighbourhood dropped, or an asymmetric copy that keeps only the maternal or paternal line. That last tier reflects what happens in the real trees. All methods rank against the same relaxed-name candidate list, and I report Recall@5, Recall@10 and MRR per tier. The R-GCN at k = 0 serves as the attribute-only version of the same model, so any gain at k = 1 or 2 comes from the neighbourhood.
+
+On RQ2: the comparison of "two records" vs. "two records + 2-hop neighbourhood" is the same k = 0 vs. k = 2 contrast as in RQ1, applied to an LLM that must decide match / not-match / not enough information and cite its evidence. It uses 150–200 hand-labelled real pairs, kept separate from the clones.
+
+To connect the two more directly, I could draw the hand-labelled pairs for RQ2 from the top-ranked candidates the RQ1 rankers return on real data. 
+
+Let me know if this clears things up. 
+
+Best regards,
+
+Rory Macdonald

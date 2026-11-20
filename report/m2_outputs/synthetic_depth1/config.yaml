@@ -1,0 +1,93 @@
+name: dev_synthetic
+seed: 0
+results_dir: results
+data:
+  source: synthetic
+  snapshot_dir: data/snapshots/webtrees
+  synthetic:
+    n_fondateurs: 40
+    n_generations: 6
+    n_arbres: 20
+    profondeur_arbre: 4
+benchmark:
+  out_dir: data/benchmarks/dev_synthetic
+  n_anchors: 200
+  min_fields: 3
+  min_family: 3
+  clone_depth: 1
+  clone_tree_base: 900
+  tiers:
+  - t0_clean
+  - t1_name
+  - t2_dates
+  - t3_parent_names
+  - t4_neighbourhood
+  - t5_one_line
+  date_shift_max: 5
+  date_drop_prob: 0.5
+  keep_fraction: 0.25
+features:
+  given_dim: 128
+  surname_dim: 64
+  place_dim: 32
+  year_center: 1750.0
+  year_scale: 100.0
+model:
+  hidden_dim: 128
+  out_dim: 64
+  num_bases: null
+  dropout: 0.1
+train:
+  ks:
+  - 0
+  - 1
+  - 2
+  epochs: 10
+  batch_size: 256
+  anchors_per_epoch: 20000
+  lr: 0.001
+  weight_decay: 0.0001
+  temperature: 0.1
+  device: auto
+  augment:
+    drop_given_prob: 0.3
+    name_variant_prob: 0.2
+    drop_fact_prob: 0.3
+    shift_year_prob: 0.2
+    shift_year_max: 3
+    drop_place_prob: 0.3
+    drop_edge_prob: 0.3
+text_embedding:
+  st_model: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+  st_batch_size: 64
+  st_device: auto
+rq1:
+  methods:
+  - exact_name
+  - tfidf
+  - sentence_transformer
+  - rgcn_k0
+  - rgcn_k1
+  - rgcn_k2
+  recall_ks:
+  - 5
+  - 10
+rq2:
+  backend:
+    kind: fake
+    model: ''
+    base_url: ''
+    api_key_env: null
+    temperature: 0.0
+    seed: 0
+    timeout_s: 120.0
+    json_mode: true
+  ks:
+  - 0
+  - 2
+  labels_path: data/rq2/labelled_pairs.jsonl
+  candidates_out: data/rq2/candidates_to_label.jsonl
+  candidate_method: exact_name
+  n_queries: 300
+  top_n: 3
+  max_pairs: 40

@@ -1,0 +1,31 @@
+== Criteria solver output (temp/correspondances_3.md, >=3 concordant criteria)
+pairs 2545 | >=4 criteria 864 | with a relational criterion 2431 (0.955)
+  mariage: 2192 (0.86)
+  conjoints: 2190 (0.86)
+  periode_estimee: 2017 (0.79)
+  descendants: 822 (0.32)
+  ascendants: 777 (0.31)
+  naissance: 436 (0.17)
+  deces: 229 (0.09)
+  sepulture: 165 (0.06)
+  bapteme: 78 (0.03)
+
+== Real-attribute RQ1: t1_name Recall@5 by perturbation type
+kind
+dropped first given name         305
+no name perturbation possible    114
+given-name variant                68
+dit name                          13
+method                         exact_name  rgcn_k0  sentence_transformer  tfidf
+kind                                                                           
+dit name                            0.923    0.846                 1.000  1.000
+dropped first given name            0.554    0.502                 0.951  0.997
+given-name variant                  0.779    0.912                 0.985  0.971
+no name perturbation possible       0.982    0.982                 0.982  0.982
+
+== t0_clean: queries where the target is not ranked first
+method
+exact_name              60
+rgcn_k0                 12
+sentence_transformer     1
+tfidf                    6

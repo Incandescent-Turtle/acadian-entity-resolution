@@ -1,0 +1,21 @@
+# TEMPORARY (Milestone 2): RQ1 attribute-only methods on the real person records
+# (name + birth date/place). Tiers needing relatives are left out.
+name: m2_real_attributes
+seed: 0
+results_dir: C:/Users/user/AppData/Local/Temp/claude/c4fb1a20a4354747/72e6b0c3-edf4-4028-947c-5edd10a8414e/scratchpad/m2/results
+data:
+  source: snapshot
+  snapshot_dir: C:/Users/user/AppData/Local/Temp/claude/c4fb1a20a4354747/72e6b0c3-edf4-4028-947c-5edd10a8414e/scratchpad/m2/snapshot
+benchmark:
+  out_dir: C:/Users/user/AppData/Local/Temp/claude/c4fb1a20a4354747/72e6b0c3-edf4-4028-947c-5edd10a8414e/scratchpad/m2/benchmark
+  n_anchors: 500
+  min_fields: 3
+  min_family: 0
+  tiers: [t0_clean, t1_name, t2_dates]
+train:
+  ks: [0]
+  epochs: 10
+  device: auto
+rq1:
+  methods: [exact_name, tfidf, sentence_transformer, rgcn_k0]
+  recall_ks: [1, 5, 10]

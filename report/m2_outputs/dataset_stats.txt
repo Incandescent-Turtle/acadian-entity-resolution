@@ -1,0 +1,12 @@
+people 149553 trees 69 per tree min/med/mean/max 41 1100.0 2167 10627
+trees >=1000: 37 top5 share 0.278
+birth year 67021 0.448 place 42818 0.286
+year quantiles [150.0, 1725.0, 1830.0, 1879.0, 1910.0, 1944.0, 2012.0]
+by century {100: 2, 1300: 1, 1400: 1, 1500: 7, 1600: 1448, 1700: 10414, 1800: 32431, 1900: 22609, 2000: 108}
+approx-qualified birth dates 8421 0.126
+empty names 0
+dit names 15372
+distinct normalised names 80780
+distinct surnames 7046 top10 [('leblanc', 9600), ('comeau', 9579), ('doucet', 7246), ('amirault', 6524), ('saulnier', 5047), ('melanson', 4649), ('muise', 4387), ('deveau', 4267), ('surette', 3963), ('babin', 3630)] top10 share 0.394
+people in shared-name groups 77411 groups 12866 max group 306 median 3.0
+paires_exact 596666 {True: 596666} paires_partage2 87377 {True: 46843, False: 40534}

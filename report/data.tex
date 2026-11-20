@@ -1,0 +1,43 @@
+\textbf{Source and collection.}
+We use an existing private database of Acadian genealogy: a WebTrees installation (MySQL/MariaDB) in which volunteer genealogists maintain 69 family trees, mostly of Acadian families of the Maritimes from the 17th century to today.
+Each tree was researched independently from parish registers, censuses and family sources, so the same person frequently appears in several trees.
+WebTrees stores every person and family as a GEDCOM record (\texttt{wt\_individuals}, \texttt{wt\_families}) together with derived index tables (names, dates, places, links).
+A person record holds one or more names (given names, surname, \textit{dit} names and other aliases), sex, and dated and placed events (birth, baptism, marriage, death, burial); family records give typed links (husband, wife, child), from which we derive \textit{parent}, \textit{child} and \textit{spouse} edges.
+No duplicate is labelled in the database, which is why RQ1 builds its ground truth by cloning (Section~\ref{sec:experiment}) and RQ2 by hand labelling.
+
+\textbf{Data access: the \texttt{genealogie\_acadienne} library.}
+All access to the database goes through \texttt{genealogie\_acadienne}, a Python library that we develop and maintain alongside this project.
+It provides the database connection and batched loaders, a single \texttt{Personne} data model (names, events with full GEDCOM dates and places, marriages, parents, children, spouses), French-aware name normalisation and \textit{dit}-name parsing, spelling-variant tables, the existing criteria-based comparison method, and Parquet snapshots so that every experiment runs on a fixed, versioned export.
+During this milestone we contributed several components written for this project back to the library: relaxed-name candidate blocking, GEDCOM date parsing, $k$-hop neighbourhood extraction, the cloning procedure used for RQ1 ground truth, and a synthetic population generator that produces data in the same format as the real snapshots (used for tests and development). Building this shared layer first took time, but it means the project code converts \texttt{Personne} objects into graphs and never re-implements data access.
+
+\textbf{Basic statistics.}
+Table~\ref{tab:data} characterises the person records used in this milestone (the person table with names and birth events, for all 149{,}553 people; the export has 41 duplicated rows, which we drop). The trees are very uneven in size (41 to 10{,}627 people; the five largest hold 28\% of all records).
+Ninety percent of birth years fall between 1725 and 1944 (median 1879), with a long tail of data errors (e.g., a birth year of 150).
+Names are highly concentrated: 7{,}046 distinct surnames, but the ten most common (LeBlanc, Comeau, Doucet, Amirault, Saulnier, Melanson, Muise, Deveau, Surette, Babin) cover 39\% of records, and 77{,}411 people (52\%) share their exact full name with someone in another tree.
+\textit{Dit} names appear in 10\% of names.
+
+\begin{table}[h]
+\centering
+\caption{Person records used in this milestone.}
+\label{tab:data}
+\begin{tabular}{lr}
+\hline
+People / trees & 149{,}553 / 69 \\
+People per tree (median / mean) & 1{,}100 / 2{,}167 \\
+Distinct normalised full names & 80{,}780 \\
+Names containing a \textit{dit} alias & 15{,}372 (10.3\%) \\
+With a birth year & 67{,}021 (44.8\%) \\
+\quad of which approximate (ABT, BEF, \dots) & 8{,}421 (12.6\%) \\
+With a birth place & 42{,}818 (28.6\%) \\
+Births 1600--1799 / 1800--1899 / 1900+ & 11{,}862 / 32{,}431 / 22{,}717 \\
+Exact-name groups across $\geq 2$ trees & 12{,}866 (77{,}411 people) \\
+Cross-tree exact-name pairs & 596{,}666 \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{Quality.}
+The data are typical of volunteer genealogy: sparse and inconsistent rather than wrong. More than half of the records have no birth year and more than 70\% no birth place, so attribute-only matching often has little more than a name to go on.
+Formats vary between trees (upper-case surnames in some, mixed case in others; \textit{dit} names inside the name, in parentheses, or as separate aliases), which our normalisation handles.
+The library's error checks flag about 5{,}200 suspicious fields, mostly dates typed into place fields (3{,}600) and digits in places (1{,}575), plus a few impossible values (16 impossible years, 26 births after death).
+We keep these records: they are part of the realistic noise that any method must cope with.

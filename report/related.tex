@@ -1,0 +1,14 @@
+\textbf{Structure in historical record linkage.}
+Fu, Christen and Zhou~\cite{fu2014graph} link households across historical UK census waves. Instead of comparing individuals one by one, they represent each household as a graph of its members (with relationship and age-difference edges) and match households by graph similarity, which resolves many individuals that attribute similarity alone confuses.
+This is the closest prior evidence that family structure identifies people in historical data.
+We differ in three ways: our records come from user-built genealogical trees rather than census snapshots (no fixed household unit, very uneven tree depth); we learn neighbourhood embeddings instead of hand-designed graph matching, so the comparison scales to retrieval over all candidates; and we test, with controlled perturbation tiers, \emph{when} structure helps rather than whether a structural matcher works overall.
+
+\textbf{Relational graph convolutional networks.}
+Schlichtkrull et al.~\cite{schlichtkrull2018rgcn} introduce the R-GCN, a graph neural network with one weight matrix per edge type (with basis decomposition to limit parameters), and apply it to entity classification and link prediction in knowledge graphs.
+A family tree is a small typed graph (\textit{parent of}, \textit{child of}, \textit{spouse of}), so the R-GCN is a natural encoder for RQ1.
+We use the architecture as is, but in a different task and training regime: we train it without labels, by contrastive learning between two noisy views of the same person~\cite{chen2020simclr}, and we use its embeddings for nearest-neighbour duplicate retrieval. Crucially, we vary the number of hops $k$ while keeping the model, features and training fixed, so $k=0$ is an attribute-only ablation of the same model.
+
+\textbf{LLMs for entity matching.}
+Narayan et al.~\cite{narayan2022foundation} show that large pretrained language models, prompted with serialised pairs of records and a few examples, are competitive with trained entity-matching systems on standard benchmarks (products, citations, restaurants).
+RQ2 builds on this finding: we also prompt an LLM with serialised records.
+Our contribution differs in what is serialised and what is measured. Genealogical records are sparse, so we test whether adding the family neighbourhood (every relative within two hops, each fact with an identifier) changes the decision; we allow an explicit \textit{insufficient information} answer; and we check whether the evidence the model cites actually exists in its context, which matters for practitioners who must verify a merge.

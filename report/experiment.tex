@@ -1,0 +1,87 @@
+We report three pieces of work for RQ1: (1) the existing criteria-based method run on the whole database, which motivates the RQ; (2) the RQ1 benchmark and all attribute-only methods run on the real person records; and (3) the complete RQ1 pipeline, including the R-GCN at $k=1,2$ and all six tiers, run end to end on a synthetic population.
+
+\subsection*{Methodology}
+
+\textbf{Existing approach on the whole database.}
+The method currently used (implemented in \texttt{genealogie\_acadienne}) compares every cross-tree pair of people who share an exact normalised full name (596{,}666 pairs) and counts concordant criteria: birth, baptism, death and burial (compatible dates and places), marriage, an overlapping estimated life period (in the version used for this run), and three relational criteria (shared parents, children or spouses).
+
+\textbf{Data preparation for the RQ1 benchmark.}
+For this milestone, the RQ1 benchmark runs on the attribute part of our dataset: the name and birth event (date and place) of all 149{,}553 people. Sex is not part of this export, so the candidate filter on opposite sex is inactive (which makes candidate lists longer, hence harder). Because these records carry no family links, only the tiers that perturb the person's own record (t0--t2) can be built, and only attribute-only methods can be evaluated. The graph methods and tiers t3--t5 are therefore evaluated on synthetic data for now (below).
+
+\textbf{Ground truth by cloning.}
+We draw 500 \emph{anchors} among well-documented people (here: given name, surname and birth year present). For each tier, every anchor (and, when family links exist, its immediate family) is copied into a dummy tree and one perturbation is applied to the copy. The copy is the query and the original is the only correct answer:
+\textbf{t0} no change (control);
+\textbf{t1} first given name dropped, else the \textit{dit} name used as surname, else a given-name variant (\textit{Marie}$\to$\textit{Mary});
+\textbf{t2} each date removed ($p=0.5$) or shifted by 1--5 years;
+\textbf{t3} parents' names blanked;
+\textbf{t4} 75\% of relatives dropped;
+\textbf{t5} only the paternal or only the maternal line kept.
+All methods rank the \emph{same} candidate list per query, produced by relaxed-name blocking from the library: a candidate must share a surname key (spelling variants and \textit{dit} aliases included) and one canonical given name, and come from another tree. The list contains the target for 99.5\% of the real queries; a target missing from the list counts as a miss for every method.
+
+\textbf{Methods.}
+\textit{Criteria (exact name):} the existing approach as a ranker: candidates in the query's exact-name pool first, then by number of concordant criteria. On the attribute-only records only the birth criteria can fire, so here it is close to ``same exact name, same birth''.
+\textit{TF-IDF:} the record serialised as text (name, aliases, sex, dated and placed events, no relatives), character 2--4-gram TF-IDF, cosine similarity.
+\textit{Sentence transformer:} the same text embedded by a pretrained multilingual model (\texttt{paraphrase-multilingual-MiniLM-L12-v2}~\cite{reimers2019sbert}).
+\textit{R-GCN ($k=0,1,2$):} each person is a node with attribute features (hashed canonical given names and character trigrams, surname spelling keys, sex, presence and scaled year of each event, hashed place tokens); relatives' names are never features, so family information only enters through the typed edges (\textit{parent}, \textit{child}, \textit{spouse}). An MLP is followed by $k$ R-GCN layers~\cite{schlichtkrull2018rgcn} with residual connections, and the centre node's output is the 64-dimensional embedding. $k=0$ has no graph layer: the same model, features and training, attribute-only. The encoder is trained without labels by symmetric InfoNCE~\cite{chen2020simclr} between two noisy views of the same person (dropped given names, name variants, dropped or shifted dates and places, dropped edges), with in-batch negatives (temperature 0.1, 10 epochs of 20{,}000 anchors, AdamW, learning rate $10^{-3}$). Benchmark anchors and clones are excluded from training.
+
+\textbf{Implementation.}
+Python with PyTorch and PyTorch Geometric~\cite{fey2019pyg}, on a single GTX~1070. Every experiment is driven by one YAML configuration and a seed, and writes its configuration and a manifest (code version, seed) next to its results. The full real-data run (benchmark, training, ranking with four methods) takes about three minutes. The code base has an automated test suite that runs only on synthetic data.
+
+\subsection*{Evaluation}
+For each query we compute the rank of the true duplicate within the shared candidate list (ties broken by a seeded hash, never by list order) and report, per tier and overall, Recall@$K$ for $K\in\{1,5,10\}$ and Mean Reciprocal Rank (MRR). We also report candidate recall and mean candidate-list size, since blocking bounds every method.
+
+\subsection*{Results}
+
+\textbf{The existing approach relies on relatives.}
+Of the 596{,}666 exact-name pairs, the criteria method flags 2{,}545 with at least three concordant criteria (864 with at least four). In 95.5\% of these, at least one criterion is relational (spouse: 86\%, children: 32\%, parents: 31\%), whereas a concordant birth appears in only 17\%. Since most records lack dates and places (Table~\ref{tab:data}), the family is the main evidence the existing method has, and it can only use it for people whose names match exactly.
+
+\textbf{Attribute-only retrieval on the real records} (Table~\ref{tab:real}, 500 queries per tier, on average 272 candidates per query).
+On unperturbed clones (t0), all methods find the duplicate in the top 5 almost always, but the criteria method ranks it first only 88\% of the time: it cannot separate namesakes with the same birth year, which are frequent (tied candidates). Under name perturbations (t1), the exact-name pool breaks down: Recall@5 drops to 0.69, and to 0.55 when the first given name is dropped, while TF-IDF stays at 0.99 (1.00 for dropped given names). In 114 of the 500 t1 queries no name perturbation was possible (a single given name without \textit{dit} or known variant), so t1 slightly understates the effect. Under date perturbations (t2), the learned R-GCN at $k=0$ is the best method (Recall@5 0.94, MRR 0.88), ahead of TF-IDF (0.88, 0.84), because it encodes years numerically and was trained to tolerate shifted and missing dates, whereas text methods treat a shifted year as a different token. Conversely, its hashed name features handle dropped given names poorly (Recall@5 0.50 for that perturbation).
+
+\begin{table}[h]
+\centering
+\caption{RQ1 on the real person records, attribute-only methods (Recall@1 / Recall@5 / MRR).}
+\label{tab:real}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lcccc}
+\hline
+Method & t0 clean & t1 name & t2 dates & all \\
+\hline
+Criteria (exact name) & .88/.99/.93 & .42/.69/.54 & .70/.87/.77 & .66/.85/.75 \\
+TF-IDF & .98/1.0/.99 & \textbf{.95}/\textbf{.99}/\textbf{.97} & .80/.88/.84 & \textbf{.91}/\textbf{.96}/\textbf{.93} \\
+Sentence transf. & \textbf{.99}/1.0/\textbf{1.0} & .86/.96/.91 & .76/.85/.80 & .87/.94/.90 \\
+R-GCN $k=0$ & .97/1.0/.98 & .48/.68/.57 & \textbf{.83}/\textbf{.94}/\textbf{.88} & .76/.87/.81 \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{End-to-end check of the graph pipeline (synthetic data).}
+To check that the full RQ1 pipeline works before the relational part of the dataset is in place, we ran it on a synthetic population produced by the library's generator: 20 overlapping trees (6 generations from 40 founder couples) with Acadian given names and surnames, \textit{dit} aliases, and per-tree noise (missing fields, spelling variants, omitted first given names, approximate dates), in exactly the format of the real snapshots. The run uses 200 anchors per tier, all six tiers and all six methods. Table~\ref{tab:synth} gives Recall@5 / MRR.
+The neighbourhood behaves as designed: going from $k=0$ to $k=1$ helps where the person's own record is degraded but the family is intact (t1: MRR .53$\to$.64; t2: .58$\to$.77), and hurts where most of the family is removed (t4: .88$\to$.66). With clones of depth~2 (immediate family plus their relatives), $k=2$ catches up with $k=1$ (overall MRR .85 for both, vs.\ .81 for $k=2$ at depth~1), confirming that thin clone neighbourhoods penalise $k=2$. Tiers t3 and t5 are saturated for every method, so the generator is too easy for them, and the attribute-only text baselines remain strongest overall. These numbers reflect our own generator and are reported only as a check that the pipeline works.
+
+\begin{table}[h]
+\centering
+\caption{RQ1 pipeline check on synthetic data, clone depth 1 (Recall@5 / MRR, 200 queries per tier).}
+\label{tab:synth}
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{lcccc}
+\hline
+Tier & TF-IDF & R-GCN $k=0$ & $k=1$ & $k=2$ \\
+\hline
+t0 clean & 1.0/1.0 & 1.0/.97 & 1.0/1.0 & 1.0/.97 \\
+t1 name & 1.0/.98 & .64/.53 & .78/.64 & .72/.61 \\
+t2 dates & .94/.74 & .79/.58 & .96/.77 & .94/.74 \\
+t3 parent names & 1.0/1.0 & 1.0/.97 & 1.0/.98 & 1.0/.95 \\
+t4 neighbourhood & 1.0/.95 & .99/.88 & .82/.66 & .78/.64 \\
+t5 one line & 1.0/1.0 & 1.0/.97 & 1.0/.98 & 1.0/.95 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection*{Takeaway messages}
+\begin{itemize}
+\item The baseline is reproduced and quantified under the metrics we will use for our approach. On real records, exact-name pooling loses about a third of duplicates from the top 5 as soon as a given name is dropped or varied; character-level text similarity recovers almost all of them. Any graph method must therefore be compared against TF-IDF, not only against the existing method.
+\item No single attribute-only method wins every tier: TF-IDF is best for name noise, the learned $k=0$ encoder for date noise. This supports reporting results per tier rather than one overall number.
+\item The existing method's confident matches are almost all driven by relatives, which supports our hypothesis that structure carries identifying signal in this database.
+\item What the results do \emph{not} yet show: whether $k=1,2$ improves on $k=0$ on the real trees. The synthetic run shows the pipeline works end to end and produces interpretable per-tier differences, but its numbers reflect our generator and are not evidence about real data. Answering RQ1 requires the relational part of the dataset (Section~\ref{sec:plan}).
+\end{itemize}
