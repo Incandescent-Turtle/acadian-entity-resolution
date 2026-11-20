@@ -1,0 +1,26 @@
+# RQ2 with a local model through Ollama (fits the GTX 1070's 8 GB at 4-bit).
+#   ollama pull qwen2.5:7b-instruct
+#   acadian-er rq2-candidates --config configs/rq2_ollama.yaml   # then hand-label
+#   acadian-er rq2 --config configs/rq2_ollama.yaml
+name: rq2_ollama
+seed: 0
+results_dir: results
+
+data:
+  source: snapshot
+  snapshot_dir: data/snapshots/webtrees
+
+rq2:
+  backend:
+    kind: ollama
+    model: qwen2.5:7b-instruct
+    base_url: http://localhost:11434
+    temperature: 0.0
+    seed: 0
+    json_mode: true
+  ks: [0, 2]
+  labels_path: data/rq2/labelled_pairs.jsonl
+  candidates_out: data/rq2/candidates_to_label.jsonl
+  candidate_method: exact_name
+  n_queries: 300
+  top_n: 3

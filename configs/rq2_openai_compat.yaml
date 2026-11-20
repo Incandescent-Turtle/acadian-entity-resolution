@@ -1,0 +1,23 @@
+# RQ2 through an OpenAI-compatible API: OpenRouter, or a vLLM / llama.cpp server on a cluster.
+# The key is read from the environment variable named in api_key_env (see .env.example).
+name: rq2_openai_compat
+seed: 0
+results_dir: results
+
+data:
+  source: snapshot
+  snapshot_dir: data/snapshots/webtrees
+
+rq2:
+  backend:
+    kind: openai_compat
+    # OpenRouter:
+    base_url: https://openrouter.ai/api/v1
+    model: qwen/qwen-2.5-72b-instruct
+    api_key_env: OPENROUTER_API_KEY
+    # Cluster (example): base_url: http://<node>:8000/v1 ; model: <served model name> ; api_key_env: CLUSTER_API_KEY
+    temperature: 0.0
+    seed: 0
+    json_mode: true
+  ks: [0, 2]
+  labels_path: data/rq2/labelled_pairs.jsonl

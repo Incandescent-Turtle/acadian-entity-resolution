@@ -1,0 +1,33 @@
+# RQ1 on the real database, from a snapshot made with:
+#   acadian-er snapshot --config configs/rq1_webtrees.yaml
+# Defaults only, no tuning. Sized for the GTX 1070 (8 GB).
+name: rq1_webtrees
+seed: 0
+results_dir: results
+
+data:
+  source: snapshot
+  snapshot_dir: data/snapshots/webtrees
+
+benchmark:
+  out_dir: data/benchmarks/rq1_webtrees
+  n_anchors: 200            # per tier
+  min_fields: 4
+  min_family: 4
+  clone_depth: 1            # immediate family, as specified
+  tiers: [t0_clean, t1_name, t2_dates, t3_parent_names, t4_neighbourhood, t5_one_line]
+
+train:
+  ks: [0, 1, 2]
+  epochs: 10
+  batch_size: 256
+  anchors_per_epoch: 20000
+  device: auto
+
+text_embedding:
+  st_model: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+  st_device: auto
+
+rq1:
+  methods: [exact_name, tfidf, sentence_transformer, rgcn_k0, rgcn_k1, rgcn_k2]
+  recall_ks: [5, 10]
