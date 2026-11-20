@@ -35,9 +35,10 @@ acadian-er = "acadian_er.cli:main"
 [tool.setuptools.packages.find]
 where = ["src"]
 
-[tool.setuptools.package-data]
-acadian_er = ["py.typed"]
-
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
+filterwarnings = [
+    "ignore:.*torch.jit.script.*:FutureWarning",
+    "ignore:Failing to pass a value to the 'type_params':DeprecationWarning",
+]

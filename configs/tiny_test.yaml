@@ -1,0 +1,41 @@
+# Tiny CPU config used by the smoke tests (seconds, not minutes).
+name: tiny_test
+seed: 0
+results_dir: results
+
+data:
+  source: synthetic
+  synthetic:
+    n_fondateurs: 6
+    n_generations: 4
+    n_arbres: 4
+    profondeur_arbre: 3
+
+benchmark:
+  out_dir: data/benchmarks/tiny_test
+  n_anchors: 15
+
+features:
+  given_dim: 64
+  surname_dim: 32
+  place_dim: 16
+
+model:
+  hidden_dim: 32
+  out_dim: 16
+
+train:
+  ks: [0, 1, 2]
+  epochs: 2
+  batch_size: 64
+  anchors_per_epoch: 256
+  device: cpu
+
+rq1:
+  methods: [exact_name, tfidf, rgcn_k0, rgcn_k1, rgcn_k2]
+
+rq2:
+  backend:
+    kind: fake
+  ks: [0, 2]
+  max_pairs: 20
