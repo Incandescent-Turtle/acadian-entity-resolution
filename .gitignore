@@ -23,6 +23,4 @@ dist/
 .vscode/
 .idea/
 
-# Milestone report: per-query outputs carry real person ids/names
-report/m2_outputs/real_attributes/per_query.csv
 report.zip
