@@ -20,6 +20,10 @@ See `docs/RESEARCH_DESIGN.md` for the full design and `docs/ARCHITECTURE.md` for
   (`data.database: mariadb`, `.env`) goes through the same loaders. Development and tests still
   use the synthetic generator (`genealogie_acadienne.commun.synthetique`).
 - Scaffold only: no tuning, no real training runs. Sensible defaults.
+- **Moving to the real data: start from `docs/REAL_DATA_PLAN.md`.** The real data was audited
+  on 2026-11-26 (`scripts/audit_real_data.py`; findings in `docs/DATA_MODEL.md` and
+  `docs/DATASET_NOTES.md`). Step 1.1 (exclude HANKINSON) is done; decisions 1.2–1.4 are still
+  to discuss with the user before steps 2–6.
 
 ## Commands
 ```bash

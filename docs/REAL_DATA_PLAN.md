@@ -35,6 +35,10 @@ uv run python scripts/audit_real_data.py --config configs/rq1_webtrees.yaml   # 
    perturbation to "dit nickname used as given name" and add a surname-dit variant only
    when the alias really is a surname. This changes the research design (RESEARCH_DESIGN.md
    tier table). **decision**
+   - The user's intent for dits (2026-11-26): a dit is an aka, and a person may be known
+     **only** by their dit name in another tree, sometimes with no proper given name at all.
+     The surname reading came from the library's assumption (classic Acadian surname dits),
+     not from the user.
 3. **Where RQ2 pairs come from.** With few real matches, the top-N candidates of a ranker
    will be mostly non-matches. Proposed: mix ranker top-N with old-method pairs that meet
    several criteria (`person_comparisons` with `n_criteria >= 4`: 541 pairs, fewer once the
