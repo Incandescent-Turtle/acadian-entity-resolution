@@ -5,7 +5,7 @@
 ```mermaid
 flowchart LR
   subgraph GA["genealogie_acadienne (pinned dependency)"]
-    DB[(WebTrees<br/>MariaDB wt_*)]
+    DB[(WebTrees wt_*<br/>MariaDB or<br/>Parquet export)]
     LOAD["charger_personnes<br/>charger_groupe"]
     MODEL["Personne<br/>(Proche, Mariage)"]
     CMP["comparer<br/>criteres_concordants"]

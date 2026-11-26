@@ -8,6 +8,8 @@ results_dir: results
 data:
   source: snapshot
   snapshot_dir: data/snapshots/webtrees
+  database: parquet         # where `snapshot` reads the tables: parquet | mariadb (.env)
+  parquet_dir: ../data/parquet
 
 benchmark:
   out_dir: data/benchmarks/rq1_webtrees_depth2

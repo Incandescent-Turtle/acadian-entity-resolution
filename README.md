@@ -12,8 +12,9 @@ family trees). CISC 451 course project (Queen's University).
   not-match / not-enough-information better with the 2-hop family than with the two
   records alone, and is the evidence it cites really in its context?
 
-Status: a working, tested scaffold on **synthetic data**. There is no database access
-yet, and nothing has been tuned.
+Status: a working, tested scaffold. The real data is available as an offline Parquet
+export of the WebTrees tables (`../data/parquet/`); experiments have only run on synthetic
+data so far, and nothing has been tuned.
 
 ## Setup
 
@@ -33,8 +34,9 @@ To develop against a local checkout of the library instead of the pinned commit:
 `uv add --editable ../genealogie-acadienne`. Don't commit that change: push the library
 and bump the pinned commit instead.
 
-For the real database, copy `.env.example` to `.env` and fill in the `DB_*` values.
-LLM API keys go there too.
+The real data is read from the Parquet export in `../data/parquet/` (`data.parquet_dir`).
+To read a live WebTrees MariaDB instead, set `data.database: mariadb`, copy `.env.example`
+to `.env` and fill in the `DB_*` values. LLM API keys go in `.env` too.
 
 ## Quickstart (synthetic data)
 
@@ -48,10 +50,10 @@ cat results/dev_synthetic/rq2/report.md
 `dev_synthetic` includes the sentence-transformer baseline, which downloads a ~470 MB
 model on first use. Remove `sentence_transformer` from `rq1.methods` to skip it.
 
-## With the real database
+## With the real data
 
 ```bash
-acadian-er snapshot --config configs/rq1_webtrees.yaml        # read-only export to data/snapshots/
+acadian-er snapshot --config configs/rq1_webtrees.yaml        # tables -> data/snapshots/webtrees/
 acadian-er rq1 --config configs/rq1_webtrees.yaml
 acadian-er rq2-candidates --config configs/rq2_ollama.yaml    # pairs to hand-label
 acadian-er rq2 --config configs/rq2_ollama.yaml               # or configs/rq2_openai_compat.yaml

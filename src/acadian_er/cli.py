@@ -1,7 +1,7 @@
 """Command line: `acadian-er <stage> --config configs/<file>.yaml`.
 
 Stages
-  snapshot        export the WebTrees database to a Parquet snapshot (needs .env; read-only)
+  snapshot        build the Personne snapshot from data.database (parquet export or MariaDB)
   synth           write a synthetic population as a snapshot (same format)
   benchmark       RQ1: clone anchors, apply tiers, write labelled queries
   train           RQ1: train one R-GCN encoder per k in train.ks
@@ -34,16 +34,9 @@ def main(argv: list[str] | None = None) -> None:
     cfg = load_config(args.config)
 
     if args.stage == "snapshot":
-        from genealogie_acadienne import get_connection, load_env_file
+        from .data import build_snapshot
 
-        from genealogie_acadienne.donnees.instantane import instantane_depuis_base
-
-        load_env_file()
-        conn = get_connection()
-        try:
-            out = instantane_depuis_base(conn, args.out or cfg.data.snapshot_dir)
-        finally:
-            conn.close()
+        out = build_snapshot(cfg, args.out)
         print(f"snapshot written to {out}")
     elif args.stage == "synth":
         from genealogie_acadienne.donnees.instantane import ecrire_instantane

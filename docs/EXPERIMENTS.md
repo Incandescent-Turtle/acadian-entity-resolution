@@ -18,7 +18,7 @@ YAML file and `seed`. Outputs go to `results/<name>/`, and every output folder g
 ## 0. Data
 
 ```bash
-# real database (read-only; needs .env with DB_*)
+# real data: WebTrees tables (data.database) -> Personne snapshot
 acadian-er snapshot --config configs/rq1_webtrees.yaml      # -> data/snapshots/webtrees/
 # or a synthetic population in the same format
 acadian-er synth --config configs/dev_synthetic.yaml --out data/snapshots/synthetic
@@ -27,6 +27,12 @@ acadian-er synth --config configs/dev_synthetic.yaml --out data/snapshots/synthe
 A snapshot folder has `personnes.parquet` (one row per person), `liens.parquet` (typed
 links) and `manifeste.json`. Set `data.source: snapshot` and `data.snapshot_dir` to use
 one. `data.source: synthetic` generates the population on the fly from `seed`.
+
+`snapshot` reads the tables from `data.database`: `parquet` (default) is the offline
+export in `data.parquet_dir` (made by the library's `genealogie-export-sql`), loaded into an
+in-memory SQLite database; `mariadb` is a live WebTrees database (read-only, `.env` with
+`DB_*`). Both use the library's `charger_personnes` / `charger_groupe`, so they give the
+same people. The manifest records the export's source dump and its SHA-256.
 
 ## 1. RQ1 — retrieval
 

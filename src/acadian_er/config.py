@@ -29,6 +29,9 @@ class SyntheticConfig:
 class DataConfig:
     source: str = "synthetic"            # "synthetic" | "snapshot"
     snapshot_dir: str = "data/snapshots/webtrees"
+    # where `acadian-er snapshot` reads the WebTrees tables from
+    database: str = "parquet"            # "parquet" (offline export) | "mariadb" (live, .env)
+    parquet_dir: str = "../data/parquet" # export made with the library's exporter_base
     synthetic: SyntheticConfig = field(default_factory=SyntheticConfig)
 
 

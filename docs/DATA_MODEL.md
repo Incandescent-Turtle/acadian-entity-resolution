@@ -1,7 +1,8 @@
 # Data model
 
 How `genealogie_acadienne`'s `Personne` maps onto our graph and features, and what
-we **assume** versus what is **confirmed**. We have not seen the database yet.
+we **assume** versus what is **confirmed**. We now have an offline export of the database;
+the assumptions below have not been checked against it yet.
 
 Legend:
 - **Confirmed**: read in the library code (`genealogie_acadienne` at `93a34cf`) or its
@@ -19,6 +20,15 @@ Legend:
 | `wt_link` (`l_type` FAMC / FAMS / CHIL) | parent/child/spouse links | confirmed |
 | `wt_dates` (`d_fact`, `d_year`) | years of BIRT, BAPM, CHR, DEAT, BURI, MARR | confirmed |
 | `wt_gedcom` | tree names; `FAMILLES.ACADIENNES`, `BABIN_TEST`, `MY_PROJECT` are skipped | confirmed |
+
+We read these tables from the offline Parquet export (`../data/parquet/`, from the
+`webtree-testing.sql` dump) through an in-memory SQLite copy, with the same SQL as on
+MariaDB. **Confirmed (2026-11-26)** that the two agree: on the export, the library's
+`genealogie-apparier` reproduces the 29,980 pairs of the `person_comparisons` table made
+earlier on MariaDB (same pairs, same values), and `genealogie-statistiques` reproduces
+`rapports/statistiques.md`. SQLite compares text with case sensitivity where MariaDB
+usually ignores case; WebTrees codes (`NAME`, `FAMC`...) and xrefs are stored consistently. First snapshot (2026-11-26): 140,248 people in 66 trees after
+skipping 9,305 in the ignored trees.
 
 Statistics in the library's notes: 149,553 individuals and 149,594 name records; about
 12,000 names shared by more than one person (316 Marie LeBlanc in 42 trees); CHR

@@ -14,8 +14,11 @@ with that person's record alone?**
 See `docs/RESEARCH_DESIGN.md` for the full design and `docs/ARCHITECTURE.md` for the code.
 
 ## Current state
-- **No database access yet.** Everything runs on the synthetic generator
-  (`genealogie_acadienne.commun.synthetique`), which feeds the same pipeline as a real snapshot.
+- **Real data is available offline.** `../data/parquet/` is a Parquet export of the WebTrees
+  tables (`wt_*.parquet` + `manifeste.json`). `acadian-er snapshot` turns it into a `Personne`
+  snapshot (`data/snapshots/webtrees/`, ~140k people) with the library loaders; a live MariaDB
+  (`data.database: mariadb`, `.env`) goes through the same loaders. Development and tests still
+  use the synthetic generator (`genealogie_acadienne.commun.synthetique`).
 - Scaffold only: no tuning, no real training runs. Sensible defaults.
 
 ## Commands
@@ -25,14 +28,13 @@ uv sync                     # torch cu126 on Windows, CPU on Linux (pyproject [t
 uv run pytest                                                   # all tests, CPU, < 1 min
 uv run acadian-er rq1 --config configs/dev_synthetic.yaml       # RQ1 end to end on synthetic data
 uv run acadian-er rq2-synthetic --config configs/dev_synthetic.yaml
-uv run acadian-er snapshot --config configs/rq1_webtrees.yaml   # needs .env and DB access
+uv run acadian-er snapshot --config configs/rq1_webtrees.yaml   # Parquet export -> Personne snapshot (~45 s, 1.5 GB)
 ```
 Stages: `snapshot synth benchmark train evaluate rq1 rq2-candidates rq2 rq2-synthetic`
 (see `docs/EXPERIMENTS.md`).
 
 ## Rules
 - **Never commit data or `.env`.** `data/`, `results/`, `temp/`, checkpoints are gitignored.
-  `temp/` holds old name-only exports from the library repo: do not read or use them.
 - **No real data in tests.** Tests use the synthetic generator or hand-built `Personne`
   objects only; they block the network and unset `DB_*`.
 - **Experiments must be reproducible:** seeded (`Config.seed`) and config-driven (YAML in
@@ -54,7 +56,8 @@ Use it for:
 - the tools that started here and moved there:
   - `commun.variantes`, `commun.candidats`, `commun.dates`;
   - `commun.voisinage`, `commun.clonage`, `commun.synthetique`;
-  - `donnees.instantane` (Parquet snapshots).
+  - `donnees.instantane` (Parquet snapshots), `donnees.source_parquet` (read the raw
+    Parquet export with the same loaders as MariaDB).
 - Import it directly. No optional imports, no try/except fallbacks, no copies or
   reimplementations of what it does. We convert `Personne` into graphs/tensors; we never
   define a competing person model.

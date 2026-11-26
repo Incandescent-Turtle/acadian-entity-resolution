@@ -1,5 +1,5 @@
 # RQ1 on the real database, from a snapshot made with:
-#   acadian-er snapshot --config configs/rq1_webtrees.yaml
+#   acadian-er snapshot --config configs/rq1_webtrees.yaml   (reads data.database)
 # Defaults only, no tuning. Sized for the GTX 1070 (8 GB).
 name: rq1_webtrees
 seed: 0
@@ -8,6 +8,8 @@ results_dir: results
 data:
   source: snapshot
   snapshot_dir: data/snapshots/webtrees
+  database: parquet         # where `snapshot` reads the tables: parquet | mariadb (.env)
+  parquet_dir: ../data/parquet
 
 benchmark:
   out_dir: data/benchmarks/rq1_webtrees
