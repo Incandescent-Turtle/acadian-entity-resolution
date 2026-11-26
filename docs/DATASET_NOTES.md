@@ -31,7 +31,7 @@ the checks at the end show how to verify the most important points.
 | 71 | `FAMILLES.ACADIENNES` | 6,910 | Copy of AMIRAULT + BABIN + ALLAIN (4,515 + 1,912 + 483, same `_UID`s). Imported from `Amirault__.ged`. |
 | 72 | `babin_test` | 1,912 | Test copy of BABIN. Its name is lowercase in `wt_gedcom`, so case-sensitive filters miss it. |
 | 70 | `MY_PROJECT` | 483 | Test project (from a Gramps export). |
-| 39 | `HANKINSON` | 203 | **Wrong file imported.** Its `gedcom_filename` is `HARRINGTON_cleaned.ged`, and it holds the same 203 people as HARRINGTON (40), with the same xrefs and identical records. The real Hankinson tree is not in the database. Keep HARRINGTON. |
+| 39 | `HANKINSON` | 203 | **Wrong file imported.** Its `gedcom_filename` is `HARRINGTON_cleaned.ged`, and it holds the same 203 people as HARRINGTON (40), with the same xrefs and identical records. Both trees' GEDCOM headers name the same export (`HARRINGTON.ged`, webtrees 2.1.22, 1 Mar 2025 21:31:45), and trees 38–41 (GENETTE, HANKINSON, HARRINGTON, HARRIS) were set up in one alphabetical batch of `*_cleaned.ged` files, so this looks like a wrong file picked during that import. No Hankinson data is anywhere in the database (3 people named Hankinson, in other trees); the dump can't show whether a real one was overwritten. Keep HARRINGTON. |
 | -1 | `DEFAULT_TREE` | 0 | WebTrees placeholder. |
 
 If HANKINSON is kept, every HARRINGTON person has a perfect duplicate; these are also the
