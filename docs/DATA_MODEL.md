@@ -4,6 +4,7 @@ How `genealogie_acadienne`'s `Personne` maps onto our graph and features, and wh
 we **assume** versus what is **confirmed**. The assumptions below were checked against the
 offline export on 2026-11-26 with `scripts/audit_real_data.py` (report in
 `results/audit/audit.md`, not committed); what follows from them is in `REAL_DATA_PLAN.md`.
+Practical notes on the dataset for future researchers are in `DATASET_NOTES.md`.
 
 Legend:
 - **Confirmed**: read in the library code (`genealogie_acadienne` at `93a34cf`) or its
@@ -126,8 +127,9 @@ Numbers are from the audit, on the raw export (149,553 people, 69 trees) or the 
      from copies of whole trees: `FAMILLES.ACADIENNES` is AMIRAULT + BABIN + ALLAIN
      (6,910 = 4,515 + 1,912 + 483), and `babin_test` is a copy of BABIN. Only 203 pairs
      survive in the snapshot, and they are another whole-tree copy (below).
-   - **New:** HANKINSON (39) and HARRINGTON (40) are the same 203 people (identical
-     names, shared `_UID`s). Both are in the snapshot, so they form 203 trivial duplicates.
+   - **New:** HANKINSON (39) was imported from `HARRINGTON_cleaned.ged`, so it holds the
+     same 203 records as HARRINGTON (40). Both are in the snapshot, so they form 203
+     trivial duplicates (see `DATASET_NOTES.md`).
    - `REFN` is a per-tree counter, not an identity.
 9. **Excluded trees. Confirmed right.** The three ignored trees are copies or tests
    (above). `babin_test` is spelled in lowercase in `wt_gedcom` but is still skipped

@@ -16,7 +16,8 @@ uv run python scripts/audit_real_data.py --config configs/rq1_webtrees.yaml   # 
   neighbourhoods have a median of 11 people, max 106; 16,661 people qualify as anchors).
 - **No real ground truth comes for free.** Shared `_UID`s only mark copies of whole trees.
   RQ1 stays clone-based, and RQ2's hand labels remain the only real evaluation.
-- **HANKINSON and HARRINGTON are the same 203 people**, and both are in the snapshot.
+- **HANKINSON was imported from the HARRINGTON file**, so the same 203 records are in the
+  snapshot twice.
 - **Dit names are mostly nicknames** (the name the person went by), not alternative
   surnames. Our tier 1 and the library's candidate keys treat them as surnames.
 - **The data is mostly 19th–20th century** (median year 1895), sparser than the synthetic
@@ -26,8 +27,8 @@ uv run python scripts/audit_real_data.py --config configs/rq1_webtrees.yaml   # 
   candidates.
 
 ## Step 1 — decisions (user)
-1. **HANKINSON / HARRINGTON.** Drop one of them (proposed: add `HARRINGTON` to the library's
-   `ARBRES_IGNORES`, since it is a property of the database). If both stay, an anchor in
+1. **HANKINSON / HARRINGTON.** Drop HANKINSON, the mislabelled copy (proposed: add it to the
+   library's `ARBRES_IGNORES`, since it is a property of the database). If both stay, an anchor in
    either tree has a second perfect match besides its clone's original, which distorts RQ1
    ranks, and RQ2 candidates would be full of trivial pairs. **decision**
 2. **Tier 1 with nickname dits.** Today `t1_name` uses the dit as the *surname* ("Timothée
