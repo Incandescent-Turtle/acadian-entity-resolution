@@ -31,12 +31,29 @@ the checks at the end show how to verify the most important points.
 | 71 | `FAMILLES.ACADIENNES` | 6,910 | Copy of AMIRAULT + BABIN + ALLAIN (4,515 + 1,912 + 483, same `_UID`s). Imported from `Amirault__.ged`. |
 | 72 | `babin_test` | 1,912 | Test copy of BABIN. Its name is lowercase in `wt_gedcom`, so case-sensitive filters miss it. |
 | 70 | `MY_PROJECT` | 483 | Test project (from a Gramps export). |
-| 39 | `HANKINSON` | 203 | **Wrong file imported.** Its `gedcom_filename` is `HARRINGTON_cleaned.ged`, and it holds the same 203 people as HARRINGTON (40), with the same xrefs and identical records. Both trees' GEDCOM headers name the same export (`HARRINGTON.ged`, webtrees 2.1.22, 1 Mar 2025 21:31:45), and trees 38–41 (GENETTE, HANKINSON, HARRINGTON, HARRIS) were set up in one alphabetical batch of `*_cleaned.ged` files, so this looks like a wrong file picked during that import. No Hankinson data is anywhere in the database (3 people named Hankinson, in other trees); the dump can't show whether a real one was overwritten. Keep HARRINGTON. |
+| 39 | `HANKINSON` | 203 | **Overwritten with the HARRINGTON tree on the site itself** (see below). It holds the same 203 people as HARRINGTON (40), with the same xrefs and identical records. Keep HARRINGTON. |
 | -1 | `DEFAULT_TREE` | 0 | WebTrees placeholder. |
 
 If HANKINSON is kept, every HARRINGTON person has a perfect duplicate; these are also the
-201 pairs of `person_comparisons` whose two people share a `_UID`. Worth reporting to whoever
-maintains the site.
+201 pairs of `person_comparisons` whose two people share a `_UID`.
+
+**What happened to HANKINSON.** The site's own activity log (`wt_log`, in the dump) shows it:
+- The tree existed well before: its settings were changed in January and March 2024.
+- On 2025-03-18, from about 01:04, an administrator re-imported every family tree through
+  the WebTrees admin pages, one after another in alphabetical order, from files named
+  `<TREE>_cleaned.ged`. These were exports made on 1 Mar 2025 (webtrees 2.1.22), as their
+  GEDCOM headers say.
+- At 01:29:59 tree 39 (HANKINSON) was given `HARRINGTON_cleaned.ged` and imported. At
+  01:30:19 tree 40 (HARRINGTON) got the same file, correctly. A WebTrees import replaces
+  the tree's whole contents, so the previous Hankinson data was overwritten.
+- The log never names a Hankinson file. No Hankinson data is left anywhere in the database
+  (3 people named Hankinson, in other trees).
+- So this happened on the site's database (the dump is a `mariadb-dump` of it), by a
+  wrong file choice during that manual import, not in any later export or processing. The
+  Hankinson data can only come back from the 1 Mar 2025 export (`HANKINSON_cleaned.ged` or
+  similar) or a backup made before 2025-03-18. Worth reporting to whoever maintains the site.
+- The dump comes from a database named `webtree-testing`; whether a separate public site was
+  affected the same way can't be told from it.
 
 ## Identifiers that look useful but aren't
 - **`_UID`** (non-empty on 65% of records): it does **not** link the same person across
@@ -105,7 +122,7 @@ maintains the site.
 - 117k notes in `wt_other`; unexplored.
 
 ## How much the trees overlap
-Without the excluded trees (140,248 people):
+Without the excluded trees (about 140,000 people):
 - 46% of people have someone in another tree with exactly the same name, but of the people
   with a birth year, only 4.9% have someone with the same name **and** birth year.
 - 19% have nobody in another tree sharing even a surname (allowing spelling variants and

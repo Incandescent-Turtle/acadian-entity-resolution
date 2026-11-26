@@ -27,10 +27,8 @@ uv run python scripts/audit_real_data.py --config configs/rq1_webtrees.yaml   # 
   candidates.
 
 ## Step 1 — decisions (user)
-1. **HANKINSON / HARRINGTON.** Drop HANKINSON, the mislabelled copy (proposed: add it to the
-   library's `ARBRES_IGNORES`, since it is a property of the database). If both stay, an anchor in
-   either tree has a second perfect match besides its clone's original, which distorts RQ1
-   ranks, and RQ2 candidates would be full of trivial pairs. **decision**
+1. **HANKINSON / HARRINGTON. Done:** HANKINSON (overwritten with the HARRINGTON file on the
+   site) is in the library's `ARBRES_IGNORES`; the snapshot has 140,045 people in 65 trees.
 2. **Tier 1 with nickname dits.** Today `t1_name` uses the dit as the *surname* ("Timothée
    Tim"). What happens in the data is that another tree records the nickname as the
    *given name* ("Tim Comeau" for "Timothée COMEAU dit Tim"). Proposed: rename the
@@ -47,7 +45,7 @@ uv run python scripts/audit_real_data.py --config configs/rq1_webtrees.yaml   # 
    a signal, or RQ2 context. **decision**
 
 ## Step 2 — library fixes (`genealogie-acadienne`, then push and bump the pin)
-1. `donnees.noms.ARBRES_IGNORES`: add the duplicate tree (if decided in 1.1).
+1. `donnees.noms.ARBRES_IGNORES`: HANKINSON added (library `3a3fb31`).
 2. `commun.variantes.cles_noms_famille`: stop using a dit alias as a surname key when it is
    one of the person's own given names (63% of dits). Today "dite Léa" adds a surname key
    `lea`, which only adds noise to the candidates. Keep it when it is not a given name.

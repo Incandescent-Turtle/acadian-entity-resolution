@@ -30,8 +30,8 @@ MariaDB. **Confirmed (2026-11-26)** that the two agree: on the export, the libra
 `genealogie-apparier` reproduces the 29,980 pairs of the `person_comparisons` table made
 earlier on MariaDB (same pairs, same values), and `genealogie-statistiques` reproduces
 `rapports/statistiques.md`. SQLite compares text with case sensitivity where MariaDB
-usually ignores case; WebTrees codes (`NAME`, `FAMC`...) and xrefs are stored consistently. First snapshot (2026-11-26): 140,248 people in 66 trees after
-skipping 9,305 in the ignored trees.
+usually ignores case; WebTrees codes (`NAME`, `FAMC`...) and xrefs are stored consistently. Snapshot (2026-11-26, with HANKINSON ignored as well): 140,045 people in 65 trees after
+skipping 9,508 in the ignored trees.
 
 Statistics in the library's notes: 149,553 individuals and 149,594 name records; about
 12,000 names shared by more than one person (316 Marie LeBlanc in 42 trees); CHR
@@ -79,7 +79,7 @@ edges, so k=0 is attribute-only.
 ## Assumptions about the real data (checked 2026-11-26)
 
 Numbers are from the audit, on the raw export (149,553 people, 69 trees) or the snapshot
-(140,248 people, 66 trees, ignored trees removed).
+(140,248 people, 66 trees, before HANKINSON was added to the ignored trees; now 140,045 and 65).
 
 1. **Dit names. Partly refuted.**
    - **Confirmed:** dit names sit inside `n_full`, after the surname (99.8%), marked `dit`
@@ -128,12 +128,13 @@ Numbers are from the audit, on the raw export (149,553 people, 69 trees) or the 
      (6,910 = 4,515 + 1,912 + 483), and `babin_test` is a copy of BABIN. Only 203 pairs
      survive in the snapshot, and they are another whole-tree copy (below).
    - **New:** HANKINSON (39) was imported from `HARRINGTON_cleaned.ged`, so it holds the
-     same 203 records as HARRINGTON (40). Both are in the snapshot, so they form 203
-     trivial duplicates (see `DATASET_NOTES.md`).
+     same 203 records as HARRINGTON (40); it was overwritten on the site on 2025-03-18
+     (see `DATASET_NOTES.md`). Now ignored by the library.
    - `REFN` is a per-tree counter, not an identity.
-9. **Excluded trees. Confirmed right.** The three ignored trees are copies or tests
-   (above). `babin_test` is spelled in lowercase in `wt_gedcom` but is still skipped
-   (9,305 people removed = 6,910 + 1,912 + 483).
+9. **Excluded trees. Confirmed right, one added.** The three original ignored trees are
+   copies or tests (above); HANKINSON is now ignored too. `babin_test` is spelled in
+   lowercase in `wt_gedcom` but is still skipped (9,508 people removed = 6,910 + 1,912 +
+   483 + 203).
 
 Not modelled yet: 343k source citations (`SOUR`, 7,537 sources; 541 source titles appear
 in several trees) and 117k notes. `person_comparisons` (the old method's 29,980 pairs)
