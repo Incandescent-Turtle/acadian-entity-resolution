@@ -37,7 +37,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "genealogie-acadienne", git = "https://github.com/Incandescent-Turtle/genealogie-acadienne.git?rev=ed6f2934e88f33b047ad2ad2f286a16d3d03e16e" },
+    { name = "genealogie-acadienne", git = "https://github.com/Incandescent-Turtle/genealogie-acadienne.git?rev=3a3fb31718ad599f1de82f6956dbe92a15f5e84b" },
     { name = "httpx", specifier = ">=0.27" },
     { name = "numpy", specifier = ">=2.1" },
     { name = "pandas", specifier = ">=2.2" },
@@ -484,7 +484,7 @@ wheels = [
 [[package]]
 name = "genealogie-acadienne"
 version = "0.1.0"
-source = { git = "https://github.com/Incandescent-Turtle/genealogie-acadienne.git?rev=ed6f2934e88f33b047ad2ad2f286a16d3d03e16e#ed6f2934e88f33b047ad2ad2f286a16d3d03e16e" }
+source = { git = "https://github.com/Incandescent-Turtle/genealogie-acadienne.git?rev=3a3fb31718ad599f1de82f6956dbe92a15f5e84b#3a3fb31718ad599f1de82f6956dbe92a15f5e84b" }
 dependencies = [
     { name = "pandas" },
     { name = "pyarrow" },
