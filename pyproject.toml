@@ -12,8 +12,9 @@ dependencies = [
     # Required library (DB access, Personne model, exact-name pooling, pairwise comparison).
     # Pinned to a commit on the `package-module` branch.
     "genealogie-acadienne @ git+https://github.com/Incandescent-Turtle/genealogie-acadienne.git@390628748c98999ed3e5f7192728dc125e37a5ab",
-    # PyTorch: install the CUDA 12.6 build FIRST (see docs/HARDWARE.md); cu126 is the
-    # last wheel line with Pascal (sm_61) kernels, and 2.14 is its last release.
+    # PyTorch: uv takes the CUDA 12.6 build on Windows (see [tool.uv.sources] and
+    # docs/HARDWARE.md); cu126 is the last wheel line with Pascal (sm_61) kernels, and
+    # 2.14 is its last release.
     "torch>=2.14,<2.15",
     "torch-geometric==2.8.1",
     "numpy>=2.1",
