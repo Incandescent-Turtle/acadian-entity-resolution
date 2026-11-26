@@ -17,20 +17,21 @@ yet, and nothing has been tuned.
 
 ## Setup
 
-Python 3.13. On Windows with an NVIDIA GTX 1070 (Pascal, sm_61), PyTorch must come from
-the **CUDA 12.6** wheel index (newer CUDA builds dropped Pascal). See
+Python 3.13 (pinned in `.python-version`), managed with [uv](https://docs.astral.sh/uv/).
+`uv sync` picks the PyTorch build per platform: **CUDA 12.6** on Windows (the last line
+with kernels for the GTX 1070, Pascal sm_61) and CPU-only on Linux. See
 [docs/HARDWARE.md](docs/HARDWARE.md).
 
 ```bash
-python -m venv .venv
-.venv\Scripts\activate                     # macOS/Linux: source .venv/bin/activate
-pip install torch==2.14.1 --index-url https://download.pytorch.org/whl/cu126
-pip install -e ".[dev]"                    # also installs genealogie-acadienne (pinned commit)
-pytest                                     # CPU only, under a minute
+uv sync                                    # .venv + deps + genealogie-acadienne (pinned commit)
+uv run pytest                              # CPU only, under a minute
 ```
 
+Prefix commands with `uv run` (or activate `.venv`).
+
 To develop against a local checkout of the library instead of the pinned commit:
-`pip install -e ../genealogie-acadienne`.
+`uv add --editable ../genealogie-acadienne`. Don't commit that change: push the library
+and bump the pinned commit instead.
 
 For the real database, copy `.env.example` to `.env` and fill in the `DB_*` values.
 LLM API keys go there too.

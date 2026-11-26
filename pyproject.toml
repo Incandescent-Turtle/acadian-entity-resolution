@@ -26,8 +26,26 @@ dependencies = [
     "python-dotenv>=1.0",
 ]
 
-[project.optional-dependencies]
+[dependency-groups]
 dev = ["pytest>=8"]
+
+# uv: torch with CUDA 12.6 (last line with Pascal kernels) on Windows, CPU-only on Linux.
+# pip ignores this; see docs/HARDWARE.md.
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-cu126", marker = "sys_platform == 'win32'" },
+    { index = "pytorch-cpu", marker = "sys_platform == 'linux'" },
+]
+
+[[tool.uv.index]]
+name = "pytorch-cu126"
+url = "https://download.pytorch.org/whl/cu126"
+explicit = true
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
 
 [project.scripts]
 acadian-er = "acadian_er.cli:main"

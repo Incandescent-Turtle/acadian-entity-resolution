@@ -24,16 +24,19 @@ GPU: NVIDIA GeForce GTX 1070, driver 582.78
 ### Install
 
 ```bash
-python -m venv .venv
-.venv\Scripts\activate
-pip install torch==2.14.1 --index-url https://download.pytorch.org/whl/cu126   # FIRST
-pip install -e ".[dev]"
-python -c "import torch; print(torch.__version__, torch.cuda.is_available(), torch.cuda.get_device_capability(0))"
+uv sync
+uv run python -c "import torch; print(torch.__version__, torch.cuda.is_available(), torch.cuda.get_device_capability(0))"
 ```
 
-Install torch from the cu126 index **before** the project. Otherwise pip resolves
-`torch` from PyPI, which is CPU-only on Windows and cu128+ (no Pascal) on Linux. The
-NVIDIA driver must support CUDA 12.6 (driver ≥ 560 on Windows; 582.78 is installed).
+`pyproject.toml` (`[tool.uv.sources]` / `[[tool.uv.index]]`) takes `torch` from the
+**cu126** index on Windows and from the **CPU** index on Linux (tests are CPU-only, and
+it avoids the multi-GB CUDA wheels). `uv.lock` records both. Plain PyPI would give
+CPU-only torch on Windows and cu128+ (no Pascal) on Linux. The NVIDIA driver must
+support CUDA 12.6 (driver ≥ 560 on Windows; 582.78 is installed).
+
+Without uv, install torch from the cu126 index **first**, then the project:
+`pip install torch==2.14.1 --index-url https://download.pytorch.org/whl/cu126`, then
+`pip install -e . --group dev` (pip ≥ 25.1).
 
 Sources:
 - [PyTorch dev-discuss: Maxwell and Pascal removed from CUDA 12.8/12.9 builds](https://dev-discuss.pytorch.org/t/cuda-toolkit-version-and-architecture-support-update-maxwell-and-pascal-architecture-support-removed-in-cuda-12-8-and-12-9-builds/3128)

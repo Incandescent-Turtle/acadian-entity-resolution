@@ -20,15 +20,12 @@ See `docs/RESEARCH_DESIGN.md` for the full design and `docs/ARCHITECTURE.md` for
 
 ## Commands
 ```bash
-# setup (Windows, GTX 1070): torch from the cu126 index FIRST, then the project
-python -m venv .venv && .venv\Scripts\activate
-pip install torch==2.14.1 --index-url https://download.pytorch.org/whl/cu126
-pip install -e ".[dev]"
+uv sync                     # torch cu126 on Windows, CPU on Linux (pyproject [tool.uv])
 
-pytest                                                   # all tests, CPU, < 1 min
-acadian-er rq1 --config configs/dev_synthetic.yaml       # RQ1 end to end on synthetic data
-acadian-er rq2-synthetic --config configs/dev_synthetic.yaml
-acadian-er snapshot --config configs/rq1_webtrees.yaml   # needs .env and DB access
+uv run pytest                                                   # all tests, CPU, < 1 min
+uv run acadian-er rq1 --config configs/dev_synthetic.yaml       # RQ1 end to end on synthetic data
+uv run acadian-er rq2-synthetic --config configs/dev_synthetic.yaml
+uv run acadian-er snapshot --config configs/rq1_webtrees.yaml   # needs .env and DB access
 ```
 Stages: `snapshot synth benchmark train evaluate rq1 rq2-candidates rq2 rq2-synthetic`
 (see `docs/EXPERIMENTS.md`).
