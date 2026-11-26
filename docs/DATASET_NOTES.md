@@ -54,6 +54,14 @@ If HANKINSON is kept, every HARRINGTON person has a perfect duplicate; these are
   similar) or a backup made before 2025-03-18. Worth reporting to whoever maintains the site.
 - The dump comes from a database named `webtree-testing`; whether a separate public site was
   affected the same way can't be told from it.
+- What the old HANKINSON tree held cannot be recovered from the dump. There is no edit history
+  (`wt_change` has a single row, from 2026), and page-hit counts (`wt_hit_counter`) have no dates.
+  The one trace: each tree has a "home person" set for all 1,043 user accounts
+  (`wt_user_gedcom_setting.gedcomid`), and a re-import doesn't change it. HANKINSON's is `I0005`
+  and HARRINGTON's `I0001`; today `I0005` in HANKINSON is "Marie Anne Harrington". So the
+  original Hankinson tree most likely had its own, different content.
+- No other tree got the wrong file: every other tree's GEDCOM header names its own file. The
+  exports are dated 1–2 Mar 2025, except the three copy/test trees.
 
 ## Identifiers that look useful but aren't
 - **`_UID`** (non-empty on 65% of records): it does **not** link the same person across
