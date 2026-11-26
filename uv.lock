@@ -3,10 +3,10 @@ revision = 5
 requires-python = ">=3.13"
 resolution-markers = [
     "python_full_version >= '3.14' and sys_platform == 'win32'",
-    "python_full_version < '3.14' and sys_platform == 'win32'",
     "python_full_version >= '3.14' and sys_platform == 'linux'",
-    "python_full_version < '3.14' and sys_platform == 'linux'",
     "python_full_version >= '3.14' and sys_platform != 'linux' and sys_platform != 'win32'",
+    "python_full_version < '3.14' and sys_platform == 'win32'",
+    "python_full_version < '3.14' and sys_platform == 'linux'",
     "python_full_version < '3.14' and sys_platform != 'linux' and sys_platform != 'win32'",
 ]
 
@@ -37,7 +37,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "genealogie-acadienne", git = "https://github.com/Incandescent-Turtle/genealogie-acadienne.git?rev=58f64454896e81ef0e8f46d945d06fc26be2ae1e" },
+    { name = "genealogie-acadienne", git = "https://github.com/Incandescent-Turtle/genealogie-acadienne.git?rev=390628748c98999ed3e5f7192728dc125e37a5ab" },
     { name = "httpx", specifier = ">=0.27" },
     { name = "numpy", specifier = ">=2.1" },
     { name = "pandas", specifier = ">=2.2" },
@@ -484,7 +484,7 @@ wheels = [
 [[package]]
 name = "genealogie-acadienne"
 version = "0.1.0"
-source = { git = "https://github.com/Incandescent-Turtle/genealogie-acadienne.git?rev=58f64454896e81ef0e8f46d945d06fc26be2ae1e#58f64454896e81ef0e8f46d945d06fc26be2ae1e" }
+source = { git = "https://github.com/Incandescent-Turtle/genealogie-acadienne.git?rev=390628748c98999ed3e5f7192728dc125e37a5ab#390628748c98999ed3e5f7192728dc125e37a5ab" }
 dependencies = [
     { name = "pandas" },
     { name = "pyarrow" },
