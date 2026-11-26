@@ -43,6 +43,10 @@ Stages: `snapshot synth benchmark train evaluate rq1 rq2-candidates rq2 rq2-synt
 - No hyperparameter tuning until real data is available; keep defaults sensible.
 - Commits: small, focused, short human titles, minimal bullet bodies. The user is the
   only author: no co-author / attribution trailers.
+- **Before working with the real data** (loading, filtering trees, counting, matching, or
+  interpreting results), read `docs/DATASET_NOTES.md`: trees to exclude, identifiers that
+  don't work, name/date/place quirks. When you find a new quirk of the data, add it there
+  (facts about the data only, no project code or results).
 - Where we guess about the real data, say so in `docs/DATA_MODEL.md`, not only in code.
 
 ## The library: `genealogie_acadienne`
@@ -89,4 +93,4 @@ into the library, a push to `package-module`, and a pin bump here):
 | `src/acadian_er/rq2/` | contexts, prompt, LLM backends, parsing, faithfulness, metrics, labels |
 | `src/acadian_er/experiments/` | stage functions used by the CLI and smoke tests |
 | `configs/` | experiment YAML (`tiny_test` for tests, `dev_synthetic`, real-data configs) |
-| `docs/` | architecture, research design, data model, experiments, hardware, staging, ADRs |
+| `docs/` | architecture, research design, data model, dataset notes, experiments, hardware, staging, ADRs |
